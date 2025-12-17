@@ -19,7 +19,7 @@
                 </Menu>
                 <Menu text="Quản Lý">
                     <items>
-                        <MenuItem fx:id="menuMaterial" text="Vật Liệu" onAction="#handleShowDHN" />
+                        <MenuItem fx:id="menuMaterial" text="Vật Liệu" onAction="#handleShowSupplier" />
                         <MenuItem text="Đơn Hàng Nhập" />
                     </items>
                 </Menu>

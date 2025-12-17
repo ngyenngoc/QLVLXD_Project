@@ -2,7 +2,6 @@
 package controller;
 
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -17,27 +16,27 @@ public class MainWindowController {
     private StackPane centerContent;
 
     // Giữ một instance của Controller con
-    private final DonHangNhapController dhnController = new DonHangNhapController();
+    private final SupplierController supplierController = new SupplierController();
 
     @FXML
     public void initialize() {
         // Tải View Quản Lý Vật Liệu ngay khi khởi động
-        handleShowDHN(null);
+        handleShowSupplier(null);
     }
 
     @FXML
-    private void handleShowDHN(ActionEvent event) {
-        System.out.println("Tải giao diện Quản Lý Đơn Hàng Nhập...");
+    private void handleShowSupplier(ActionEvent event) {
+        System.out.println("Loading Supplier Management Interface ...");
 
         // 1. Lấy Root Node (Pane) từ VatLieuController
-        Pane dhnView = dhnController.getDHNManagementView();
+        Pane supplierView = supplierController.getSupplierManagementView();
 
         // 2. Xóa nội dung cũ và thêm View mới vào StackPane
         centerContent.getChildren().clear();
-        centerContent.getChildren().add(dhnView);
+        centerContent.getChildren().add(supplierView);
 
         // Đảm bảo View được căn chỉnh và tự co dãn
-        StackPane.setAlignment(dhnView, javafx.geometry.Pos.CENTER);
+        StackPane.setAlignment(supplierView, javafx.geometry.Pos.CENTER);
     }
 
     @FXML
