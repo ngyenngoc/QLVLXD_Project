@@ -23,9 +23,9 @@ public class ProductDAO {
         product.setLastStockUpdate(LocalDateTime.now());
         product.setCreatedAt(LocalDateTime.now());
         product.setUpdatedAt(LocalDateTime.now());
-        product.setStatus("Waiting"); // thiết lập trạng thái mặc định kho thêm mockDataList
+        product.setStatus("Chờ"); // thiết lập trạng thái mặc định kho thêm mockDataList
             mockDataList.add(product);
-        System.out.println("DAO: [Mock] Product added " + product.getProductID());
+        System.out.println("DAO: [Mock] Đã thêm sản phẩm " + product.getProductID());
         return true;
     }
     public boolean update(Product updateProduct) { // duyệt qua danh sách để tìm đối tượng cũ
@@ -34,7 +34,7 @@ public class ProductDAO {
             if (mockDataList.get(i).getProductID().equals(updateProduct.getProductID())) {
                 // Thay thế đối tượng cũ bằng đối tượng mới
                 mockDataList.set(i, updateProduct);
-                System.out.println("DAO: [Mock] Product updated: " + updateProduct.getProductID());
+                System.out.println("DAO: [Mock] Đã cập nhật sản phẩm: " + updateProduct.getProductID());
                 return true;
             }
         }

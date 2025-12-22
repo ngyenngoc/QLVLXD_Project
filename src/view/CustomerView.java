@@ -20,10 +20,10 @@ public class CustomerView {
     public final TextField txtPhoneNumber = new TextField();
     public final TextField txtEmail = new TextField();
 
-    public final Button btnAdd = new Button("Add new");
-    public final Button btnUpdate = new Button("Update");
-    public final Button btnDelete = new Button("Delete");
-    public final Button btnRefresh = new Button("Refresh");
+    public final Button btnAdd = new Button("Thêm mới");
+    public final Button btnUpdate = new Button("Cập nhật");
+    public final Button btnDelete = new Button("Xóa");
+    public final Button btnRefresh = new Button("Làm mới");
 
     public Pane createRootNode() {
         AnchorPane root = new AnchorPane();
@@ -41,13 +41,13 @@ public class CustomerView {
 
     private void setupTableView() {
         tblCustomer.setPrefSize(1160, 400);
-        TableColumn<Customer, String> customerIDCol = new TableColumn<>("Customer id");
+        TableColumn<Customer, String> customerIDCol = new TableColumn<>("Mã khách hàng ");
         customerIDCol.setCellValueFactory(new PropertyValueFactory<>("customerID"));
-        TableColumn<Customer, String> customerNameCol = new TableColumn<>("Customer name");
+        TableColumn<Customer, String> customerNameCol = new TableColumn<>("Tên khách hàng");
         customerNameCol.setCellValueFactory(new PropertyValueFactory<>("customerName"));
-        TableColumn<Customer, String> addressCol = new TableColumn<>("Address");
+        TableColumn<Customer, String> addressCol = new TableColumn<>("Địa chỉ");
         addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
-        TableColumn<Customer, String> phoneNumberCol = new TableColumn<>("Phone number");
+        TableColumn<Customer, String> phoneNumberCol = new TableColumn<>("Số điện thoại");
         phoneNumberCol.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
         TableColumn<Customer, String> emailCol = new TableColumn<>("Email");
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
@@ -60,13 +60,13 @@ public class CustomerView {
         grid.setHgap(15);
         grid.setVgap(10);
         //Bố cục Form
-        grid.add(new Label("Customer id:"), 0, 0);
+        grid.add(new Label("Mã khách hàng:"), 0, 0);
         grid.add(txtCustomerID, 1, 0);
-        grid.add(new Label("Customer name:"), 0, 1);
+        grid.add(new Label("Tên khách hàng:"), 0, 1);
         grid.add(txtCustomerName, 1, 1);
-        grid.add(new Label("Address:"), 0, 2);
+        grid.add(new Label("Địa chỉ:"), 0, 2);
         grid.add(txtAddress, 1, 2);
-        grid.add(new Label("Phone number:"), 2, 0);
+        grid.add(new Label("Số điện thọi:"), 2, 0);
         grid.add(txtPhoneNumber, 3, 0);
         grid.add(new Label("Email:"), 2, 1);
         grid.add(txtEmail, 3, 1);

@@ -19,10 +19,10 @@ public class SupplierView {
     public final TextField txtPhoneNumber = new TextField();
     public final TextField txtEmail = new TextField();
 
-    public final Button btnAdd = new Button("Add new");
-    public final Button btnUpdate = new Button("Update");
-    public final Button btnDelete = new Button("Delete");
-    public final Button btnRefresh = new Button("Refresh");
+    public final Button btnAdd = new Button("Thêm mới");
+    public final Button btnUpdate = new Button("Cập nhật");
+    public final Button btnDelete = new Button("Xóa");
+    public final Button btnRefresh = new Button("Thêm mới");
 
     public Pane createRootNode() {
         AnchorPane root = new AnchorPane();
@@ -41,13 +41,13 @@ public class SupplierView {
 
     private void setupTableView() {
         tblSupplier.setPrefSize(1160, 400);
-        TableColumn<Supplier, String> supplierIDCol = new TableColumn<>("Supplier id");
+        TableColumn<Supplier, String> supplierIDCol = new TableColumn<>("Mã nhà cung cấp");
         supplierIDCol.setCellValueFactory(new PropertyValueFactory<>("supplierID"));
-        TableColumn<Supplier, String> supplierNameCol = new TableColumn<>("Supplier name");
+        TableColumn<Supplier, String> supplierNameCol = new TableColumn<>("Tên nhà cung cấp");
         supplierNameCol.setCellValueFactory(new PropertyValueFactory<>("supplierName"));
-        TableColumn<Supplier, String> addressCol = new TableColumn<>("Address");
+        TableColumn<Supplier, String> addressCol = new TableColumn<>("Địa chỉ");
         addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
-        TableColumn<Supplier, String> phoneNumberCol = new TableColumn<>("Phone number");
+        TableColumn<Supplier, String> phoneNumberCol = new TableColumn<>("Số điện thoại");
         phoneNumberCol.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
         TableColumn<Supplier, String> emailCol = new TableColumn<>("Email");
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));

@@ -49,50 +49,50 @@ public class CustomerController {
     private void handleAddCustomer(){
         Customer newCustomer = new Customer(dao.generateNewId(), view.txtCustomerName.getText(), view.txtAddress.getText(), view.txtPhoneNumber.getText(), view.txtEmail.getText());
         if (dao.insert(newCustomer)){
-            view.lblMessage.setText("Customer added " +newCustomer.getCustomerName() + " successfully!");
+            view.lblMessage.setText("Đã thêm khách hàng: " +newCustomer.getCustomerName() + " thành công!");
             customerList.add(newCustomer);
             clearForm();
         }
         else{
-            view.lblMessage.setText("Failed to add customer!");
+            view.lblMessage.setText("Lỗi: Không thể thêm khách hàng!");
         }
     }
     private void handleUpdateCustomer(){
         Customer selectedCustomer = view.tblCustomer.getSelectionModel().getSelectedItem();
         if (selectedCustomer == null){
-            view.lblMessage.setText("Please select a customer to edit");
+            view.lblMessage.setText("Vui lòng chọn một khách hàng trong danh sách để sửa");
             return;
         }
         Customer updatedCustomer = new Customer(
                 view.txtCustomerID.getText(), view.txtCustomerName.getText(), view.txtAddress.getText(), view.txtPhoneNumber.getText(),view.txtEmail.getText()
         );
         if(dao.update(updatedCustomer)){
-            view.lblMessage.setText("Customer updated successfully!");
+            view.lblMessage.setText("Cập nhật thông tin khách hàng thành công!");
             int index = customerList.indexOf(selectedCustomer);
             if(index != -1){
                 customerList.set(index, updatedCustomer);
             }
         }
         else{
-            view.lblMessage.setText("Updated failed!");
+            view.lblMessage.setText("Lỗi: Cập nhật thất bại!");
         }
     }
     private void handleDeleteCustomer(){
         Customer selectedCustomer = view.tblCustomer.getSelectionModel().getSelectedItem();
         if(selectedCustomer == null){
-            view.lblMessage.setText("Please select a customer to delete");
+            view.lblMessage.setText("Vui lòng chọn khách hàng cần xóa");
             return;
         }
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete " +selectedCustomer.getCustomerName() + "?");
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Bạn có chắc chắn muốn xóa khách hàng: " +selectedCustomer.getCustomerName() + "?");
         Optional<ButtonType> result = confirm.showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK){
             if (dao.delete(selectedCustomer.getCustomerID())){
-                view.lblMessage.setText("Customer deleted " + selectedCustomer.getCustomerName() + " successfully");
+                view.lblMessage.setText("Đã xóa khách hàng " + selectedCustomer.getCustomerName() + " thành công");
                 customerList.remove(selectedCustomer);
                 clearForm();
             }
             else{
-                view.lblMessage.setText("Delete failed!");
+                view.lblMessage.setText("Đã xóa khách hàng!");
             }
         }
     }

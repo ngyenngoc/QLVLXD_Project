@@ -16,27 +16,27 @@ public class MainWindowController {
     private StackPane centerContent;
 
     // Giữ một instance của Controller con
-    private final SupplierController supplierController = new SupplierController();
+    private final ProductController productController = new ProductController();
 
     @FXML
     public void initialize() {
         // Tải View Quản Lý Vật Liệu ngay khi khởi động
-        handleShowSupplier(null);
+        handleShowProduct(null);
     }
 
     @FXML
-    private void handleShowSupplier(ActionEvent event) {
-        System.out.println("Loading Supplier Management Interface ...");
+    private void handleShowProduct(ActionEvent event) {
+        System.out.println("Loading Product Management Interface ...");
 
         // 1. Lấy Root Node (Pane) từ VatLieuController
-        Pane supplierView = supplierController.getSupplierManagementView();
+        Pane productView = productController.getProductManagementView();
 
         // 2. Xóa nội dung cũ và thêm View mới vào StackPane
         centerContent.getChildren().clear();
-        centerContent.getChildren().add(supplierView);
+        centerContent.getChildren().add(productView);
 
         // Đảm bảo View được căn chỉnh và tự co dãn
-        StackPane.setAlignment(supplierView, javafx.geometry.Pos.CENTER);
+        StackPane.setAlignment(productView, javafx.geometry.Pos.CENTER);
     }
 
     @FXML

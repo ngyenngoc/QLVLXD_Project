@@ -50,50 +50,50 @@ public class SupplierController {
     private void handleAddSupplier(){
         Supplier newSupplier = new Supplier(dao.generateNewID(), view.txtSupplierName.getText(), view.txtAddress.getText(), view.txtPhoneNumber.getText(), view.txtEmail.getText());
             if (dao.insert(newSupplier)){
-                view.lblMessage.setText("Supplier added " +newSupplier.getSupplierName() + " successfully!");
+                view.lblMessage.setText("Đã thêm nhà cung cấp " +newSupplier.getSupplierName() + " thành công!");
                 supplierList.add(newSupplier);
                 clearForm();
             }
             else{
-                view.lblMessage.setText("Failed to add supplier!");
+                view.lblMessage.setText("Lỗi: Không thể thêm nhà cung cấp!");
             }
         }
     private void handleUpdateSupplier(){
     Supplier selectedSupplier = view.tblSupplier.getSelectionModel().getSelectedItem();
     if (selectedSupplier == null){
-        view.lblMessage.setText("Please select a supplier to edit");
+        view.lblMessage.setText("Vui lòng chọn một khách hàng trong danh sách để sửa");
         return;
     }
     Supplier updatedSupplier = new Supplier(
             view.txtSupplierID.getText(), view.txtSupplierName.getText(), view.txtAddress.getText(), view.txtPhoneNumber.getText(),view.txtEmail.getText()
         );
     if(dao.update(updatedSupplier)){
-        view.lblMessage.setText("Supplier updated successfully!");
+        view.lblMessage.setText("Cập nhật thông tin nhà cung cấp thành công!");
         int index = supplierList.indexOf(selectedSupplier);
         if(index != -1){
             supplierList.set(index, updatedSupplier);
         }
     }
     else{
-        view.lblMessage.setText("Updated failed!");
+        view.lblMessage.setText("Lỗi: Nhà cung cấp thất bại!");
     }
     }
     private void handleDeleteSupplier(){
     Supplier selectedSupplier = view.tblSupplier.getSelectionModel().getSelectedItem();
     if(selectedSupplier == null){
-        view.lblMessage.setText("Please select a customer to delete");
+        view.lblMessage.setText("Vui lòng chọn nhà cung cấp cần xóa");
         return;
     }
-    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete " +selectedSupplier.getSupplierName() + "?");
+    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Bạn có chắc chắn muốn xóa nhà cung cấp " +selectedSupplier.getSupplierName() + "?");
         Optional<ButtonType> result = confirm.showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK){
             if (dao.delete(selectedSupplier.getSupplierID())){
-                view.lblMessage.setText("Supplier deleted " + selectedSupplier.getSupplierName() + " successfully");
+                view.lblMessage.setText("Đã xóa nhà cung cấp " + selectedSupplier.getSupplierName() + " thành công");
                 supplierList.remove(selectedSupplier);
                 clearForm();
             }
             else{
-                view.lblMessage.setText("Delete failed!");
+                view.lblMessage.setText("Đã xóa khách hàng!");
             }
         }
     }

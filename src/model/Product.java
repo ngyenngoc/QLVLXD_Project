@@ -8,7 +8,7 @@ public class Product {
     private String productCategory;
     private String description;
     private String unit;
-    private BigDecimal purchasePric;
+    private BigDecimal purchasePrice;
     private BigDecimal sellingPrice;
     private int stockQuantity;
     private String status;
@@ -16,14 +16,14 @@ public class Product {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String adminID;
-    public Product(String productID, String supplierID, String productName, String productCategory, String description, String unit, BigDecimal purchasePric, BigDecimal sellingPrice, int stockQuantity, String status, LocalDateTime lastStockUpdate, LocalDateTime createdAt,  LocalDateTime updatedAt,  String adminID   ){
+    public Product(String productID, String supplierID, String productName, String productCategory, String description, String unit, BigDecimal purchasePrice, BigDecimal sellingPrice, int stockQuantity, String status, LocalDateTime lastStockUpdate, LocalDateTime createdAt,  LocalDateTime updatedAt,  String adminID   ){
         this.productID = productID;
         this.supplierID = supplierID;
         this.productName = productName;
         this.productCategory = productCategory;
         this.description = description;
         this.unit = unit;
-        this.purchasePric = purchasePric;
+        this.purchasePrice = purchasePrice;
         this.sellingPrice = sellingPrice;
         this.stockQuantity = stockQuantity;
         this.status = status;
@@ -50,8 +50,8 @@ public class Product {
     public String getUnit() {
         return unit;
     }
-    public BigDecimal getPurchasePric() {
-        return purchasePric;
+    public BigDecimal getPurchasePrice() {
+        return purchasePrice;
     }
     public BigDecimal getSellingPrice() {
         return sellingPrice;
@@ -94,7 +94,7 @@ public class Product {
         this.unit = unit;
     }
     public void setPurchasePric(BigDecimal purchasePric) {
-        this.purchasePric = purchasePric;
+        this.purchasePrice = purchasePrice;
     }
     public void setSellingPrice(BigDecimal sellingPrice) {
         this.sellingPrice = sellingPrice;
