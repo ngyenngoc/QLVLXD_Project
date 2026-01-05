@@ -1,44 +1,51 @@
-// File: controller/MainWindowController.java
 package controller;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.event.ActionEvent;
+import java.io.IOException;
+import java.net.URL;
 
 public class MainWindowController {
 
     @FXML
-    private MenuItem menuMaterial;
-
-    @FXML
     private StackPane centerContent;
-
-    // Giữ một instance của Controller con
-    private final ProductController productController = new ProductController();
 
     @FXML
     public void initialize() {
-        // Tải View Quản Lý Vật Liệu ngay khi khởi động
-        handleShowProduct(null);
+        // Mặc định hiện trang chủ hoặc trang nhà cung cấp khi vừa mở máy
+        handleShowSupplier(null);
     }
 
     @FXML
-    private void handleShowProduct(ActionEvent event) {
-        System.out.println("Loading Product Management Interface ...");
+    private void handleShowSupplier(ActionEvent event) {
+        try {
+            // Cách viết này an toàn hơn để tìm file trong Resource Folders
+            URL fxmlLocation = getClass().getResource("/view/SupplierlView.fxml");
 
-        // 1. Lấy Root Node (Pane) từ VatLieuController
-        Pane productView = productController.getProductManagementView();
+            if (fxmlLocation == null) {
+                // Nếu vẫn không tìm thấy, thử tìm tương đối từ controller
+                fxmlLocation = getClass().getResource("../view/SupplierView.fxml");
+            }
 
-        // 2. Xóa nội dung cũ và thêm View mới vào StackPane
-        centerContent.getChildren().clear();
-        centerContent.getChildren().add(productView);
+            if (fxmlLocation == null) {
+                throw new IOException("Không tìm thấy file MaterialView.fxml tại thư mục view!");
+            }
 
-        // Đảm bảo View được căn chỉnh và tự co dãn
-        StackPane.setAlignment(productView, javafx.geometry.Pos.CENTER);
+            FXMLLoader loader = new FXMLLoader(fxmlLocation);
+            Parent materialView = loader.load();
+
+            if (centerContent != null) {
+                centerContent.getChildren().setAll(materialView);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Lỗi nạp giao diện : " + e.getMessage());
+        }
     }
-
     @FXML
     private void handleExit(ActionEvent event) {
         System.exit(0);

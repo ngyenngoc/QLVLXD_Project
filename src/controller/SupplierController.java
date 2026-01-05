@@ -4,112 +4,133 @@ package controller;
 import dao.SupplierDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import model.Supplier;
-import view.SupplierView;
 
 import java.util.List;
 import java.util.Optional;
 
 
 public class SupplierController {
-    private final SupplierDAO dao= new SupplierDAO();
-    private final SupplierView view= new SupplierView();
+    @FXML private TextField txtSupplierID, txtSupplierName, txtAddress, txtPhoneNumber, txtEmail;
+    @FXML
+    private TableView<Supplier> tblSupplier;
+    @FXML private TableColumn<Supplier, String> colID, colName, colAddress, colPhone, colEmail;
+    @FXML private Label lblMessage;
+    @FXML private Button btnAdd, btnUpdate, btnDelete, btnRefresh;
+
+    private final SupplierDAO dao = new SupplierDAO();
     private final ObservableList<Supplier> supplierList = FXCollections.observableArrayList();
     // Phương thức chính để lấy View
-    public Pane getSupplierManagementView(){
-        initialize();
-        return view.createRootNode();
-    }
-    public void initialize(){
-        view.tblSupplier.setItems(supplierList);
-        setupEventHandlers();
+    @FXML
+    public void initialize() {
+        // Ánh xạ cột bảng với thuộc tính của model Supplier
+        colID.setCellValueFactory(new PropertyValueFactory<>("supplierID"));
+        colName.setCellValueFactory(new PropertyValueFactory<>("supplierName"));
+        colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
+        colPhone.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
+        colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+
+        tblSupplier.setItems(supplierList);
         loadSupplierData();
+
+        setupEventHandlers();
+        // Gán sự kiện khi click vào dòng trong bảng
+        tblSupplier.getSelectionModel().selectedItemProperty().addListener(
+                (obs, oldSelection, newSelection) -> {
+                    if (newSelection != null) displayDetails(newSelection);
+                });
     }
+    @FXML
     private void loadSupplierData(){
         List<Supplier> list = dao.getAll();
     supplierList.clear();
     supplierList.addAll(list);
     }
     private void setupEventHandlers() {
-        view.btnAdd.setOnAction(e -> handleAddSupplier());
-        view.btnUpdate.setOnAction(e -> handleUpdateSupplier());
-        view.btnDelete.setOnAction(e -> handleDeleteSupplier());
-        view.btnRefresh.setOnAction(e -> loadSupplierData());
+        btnAdd.setOnAction(e -> handleAddSupplier());
+        btnUpdate.setOnAction(e -> handleUpdateSupplier());
+        btnDelete.setOnAction(e -> handleDeleteSupplier());
+        btnRefresh.setOnAction(e -> loadSupplierData());
         // Gán Listener cho TableView
-        view.tblSupplier.getSelectionModel().selectedItemProperty().addListener(
+        tblSupplier.getSelectionModel().selectedItemProperty().addListener(
                 (obs, oldSelection, newSelection) -> {
                     if (newSelection != null) {
                         displayDetails(newSelection);
                     }
                 });
     }
+    @FXML
     //Xử lý CRUD
     private void handleAddSupplier(){
-        Supplier newSupplier = new Supplier(dao.generateNewID(), view.txtSupplierName.getText(), view.txtAddress.getText(), view.txtPhoneNumber.getText(), view.txtEmail.getText());
+        Supplier newSupplier = new Supplier(dao.generateNewID(), txtSupplierName.getText(), txtAddress.getText(), txtPhoneNumber.getText(), txtEmail.getText());
             if (dao.insert(newSupplier)){
-                view.lblMessage.setText("Đã thêm nhà cung cấp " +newSupplier.getSupplierName() + " thành công!");
+                lblMessage.setText(" Thêm nhà cung cấp " +newSupplier.getSupplierName() + " thành công!");
                 supplierList.add(newSupplier);
                 clearForm();
             }
             else{
-                view.lblMessage.setText("Lỗi: Không thể thêm nhà cung cấp!");
+                lblMessage.setText("Lỗi: Không thể thêm nhà cung cấp!");
             }
         }
+        @FXML
     private void handleUpdateSupplier(){
-    Supplier selectedSupplier = view.tblSupplier.getSelectionModel().getSelectedItem();
+    Supplier selectedSupplier = tblSupplier.getSelectionModel().getSelectedItem();
     if (selectedSupplier == null){
-        view.lblMessage.setText("Vui lòng chọn một khách hàng trong danh sách để sửa");
+        lblMessage.setText("Vui lòng chọn một khách hàng trong danh sách để sửa");
         return;
     }
     Supplier updatedSupplier = new Supplier(
-            view.txtSupplierID.getText(), view.txtSupplierName.getText(), view.txtAddress.getText(), view.txtPhoneNumber.getText(),view.txtEmail.getText()
+            txtSupplierID.getText(), txtSupplierName.getText(), txtAddress.getText(), txtPhoneNumber.getText(),txtEmail.getText()
         );
     if(dao.update(updatedSupplier)){
-        view.lblMessage.setText("Cập nhật thông tin nhà cung cấp thành công!");
+        lblMessage.setText("Cập nhật thông tin nhà cung cấp thành công!");
         int index = supplierList.indexOf(selectedSupplier);
         if(index != -1){
             supplierList.set(index, updatedSupplier);
         }
     }
     else{
-        view.lblMessage.setText("Lỗi: Nhà cung cấp thất bại!");
+        lblMessage.setText("Lỗi: Nhà cung cấp thất bại!");
     }
     }
+    @FXML
     private void handleDeleteSupplier(){
-    Supplier selectedSupplier = view.tblSupplier.getSelectionModel().getSelectedItem();
+    Supplier selectedSupplier = tblSupplier.getSelectionModel().getSelectedItem();
     if(selectedSupplier == null){
-        view.lblMessage.setText("Vui lòng chọn nhà cung cấp cần xóa");
+        lblMessage.setText("Vui lòng chọn nhà cung cấp cần xóa");
         return;
     }
     Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Bạn có chắc chắn muốn xóa nhà cung cấp " +selectedSupplier.getSupplierName() + "?");
         Optional<ButtonType> result = confirm.showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK){
             if (dao.delete(selectedSupplier.getSupplierID())){
-                view.lblMessage.setText("Đã xóa nhà cung cấp " + selectedSupplier.getSupplierName() + " thành công");
+                lblMessage.setText("Đã xóa nhà cung cấp " + selectedSupplier.getSupplierName() + " thành công");
                 supplierList.remove(selectedSupplier);
                 clearForm();
             }
             else{
-                view.lblMessage.setText("Đã xóa khách hàng!");
+                lblMessage.setText("Đã xóa khách hàng!");
             }
         }
     }
     private void displayDetails(Supplier supplier){
-        view.txtSupplierID.setText(supplier.getSupplierID());
-        view.txtSupplierName.setText(supplier.getSupplierName());
-        view.txtAddress.setText(supplier.getAddress());
-        view.txtPhoneNumber.setText(supplier.getPhoneNumber());
-        view.txtEmail.setText(supplier.getEmail());
-        view.lblMessage.setText("");
+        txtSupplierID.setText(supplier.getSupplierID());
+        txtSupplierName.setText(supplier.getSupplierName());
+        txtAddress.setText(supplier.getAddress());
+        txtPhoneNumber.setText(supplier.getPhoneNumber());
+        txtEmail.setText(supplier.getEmail());
+        lblMessage.setText("");
     }
     private void clearForm(){
-        view.txtSupplierID.clear();
-        view.txtSupplierName.clear();
-        view.txtAddress.clear();
-        view.txtPhoneNumber.clear();
-        view.txtEmail.clear();
+        txtSupplierID.clear();
+        txtSupplierName.clear();
+        txtAddress.clear();
+        txtPhoneNumber.clear();
+        txtEmail.clear();
     }
 }

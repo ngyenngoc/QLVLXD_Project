@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 <BorderPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainWindowController">
-
     <top>
-        <MenuBar>
+        <MenuBar BorderPane.alignment="CENTER">
             <menus>
                 <Menu text="Hệ Thống">
                     <items>
@@ -15,15 +13,15 @@
                 </Menu>
                 <Menu text="Quản Lý">
                     <items>
-                        <MenuItem fx:id="menuMaterial" onAction="#handleShowProduct" text="Vật Liệu" />
+                        <MenuItem fx:id="menuMaterial" onAction="#handleShowSupplier" text="Vật Liệu" />
                         <MenuItem text="Đơn Hàng Nhập" />
                     </items>
                 </Menu>
             </menus>
         </MenuBar>
     </top>
-   <center>
-      <SplitPane prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-   </center>
 
+    <center>
+        <StackPane fx:id="centerContent" prefHeight="675.0" prefWidth="1000.0" BorderPane.alignment="CENTER" />
+    </center>
 </BorderPane>

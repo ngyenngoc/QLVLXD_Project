@@ -1,6 +1,5 @@
 package dao;
 
-import model.Product;
 import model.SalesOrder;
 
 import java.math.BigDecimal;
