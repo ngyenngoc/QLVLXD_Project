@@ -37,8 +37,8 @@
     </HBox>
 
     <HBox alignment="CENTER_LEFT" spacing="10.0">
-        <TextField prefWidth="250" promptText="Tìm kiếm..." style="-fx-background-radius: 5; -fx-padding: 8;" />
-        <Button style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold;" text="Tìm kiếm" />
+        <TextField fx:id="txtSearch" onKeyReleased="#handleSearch" prefWidth="250" promptText="Tìm kiếm tên khách hàng..." style="-fx-background-radius: 5; -fx-padding: 8;" />
+        <Button onAction="#handleSearch" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold;" text="Tìm kiếm" />
         <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
         <Button onAction="#handleClear" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold;" text="Làm mới" />
     </HBox>
