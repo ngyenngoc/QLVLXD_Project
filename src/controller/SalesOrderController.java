@@ -164,6 +164,7 @@ public class SalesOrderController {
                 cbCustomer.getValue().getCustomerID(),
                 cbCustomer.getValue().getCustomerName(),
                 1,
+//                cbPaymentMethod.getValue(),
                 txtNotes.getText(),
                 new BigDecimal(txtTotalAmount.getText())
         );
@@ -202,6 +203,55 @@ public class SalesOrderController {
     @FXML private TextField txtSearch; // Ô nhập từ khóa tìm kiếm
 
 
-    @FXML private void handleDelete() {} // Khai báo để tránh lỗi FXML action
-    @FXML private void handleUpdate() {}
-}
+    @FXML
+    private void handleDelete() {
+        SalesOrder selected = tvOrders.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert("Thông báo", "Vui lòng chọn hóa đơn cần xóa!");
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Xóa hóa đơn " + selected.getOrderID() + "?", ButtonType.YES, ButtonType.NO);
+        if (confirm.showAndWait().get() == ButtonType.YES) {
+            if (orderDAO.delete(selected.getOrderID())) {
+                showAlert("Thành công", "Đã xóa hóa đơn!");
+                loadData();
+                handleClear();
+            } else {
+                showAlert("Lỗi", "Không thể xóa (có thể do ràng buộc dữ liệu chi tiết)!");
+            }
+        }
+    }
+
+    @FXML
+    private void handleUpdate() {
+        SalesOrder selectedOrder = tvOrders.getSelectionModel().getSelectedItem();
+
+        if (selectedOrder == null) {
+            showAlert("Thông báo", "Vui lòng chọn đơn hàng cần cập nhật từ danh sách!");
+            return;
+        }
+
+        // Thu thập dữ liệu từ form
+        try {
+            selectedOrder.setCustomerID(cbCustomer.getValue().getCustomerID());
+            selectedOrder.setCustomerName(cbCustomer.getValue().getCustomerName());
+            selectedOrder.setNotes(txtNotes.getText());
+            selectedOrder.setTotalAmount(new BigDecimal(txtTotalAmount.getText()));
+
+            // Cập nhật các thông tin chi tiết nếu cần (Tùy vào cấu trúc DB của bạn)
+            selectedOrder.setQuantity(Integer.parseInt(txtQuantity.getText()));
+            selectedOrder.setSalePrice(new BigDecimal(txtPrice.getText()));
+
+            // Gọi DAO cập nhật (Giả sử bạn đã có hàm update trong SalesOrderDAO)
+            if (orderDAO.update(selectedOrder)) {
+                showAlert("Thành công", "Cập nhật đơn hàng thành công!");
+                listOrders.setAll(orderDAO.getAll()); // Refresh bảng
+            } else {
+                showAlert("Lỗi", "Cập nhật thất bại!");
+            }
+        } catch (Exception e) {
+            showAlert("Lỗi", "Dữ liệu nhập vào không hợp lệ!");
+        }
+    }
+    }
