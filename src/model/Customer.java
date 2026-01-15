@@ -13,6 +13,10 @@ public class Customer {
         this.phoneNumber = phoneNumber;
         this.email = email;
     }
+
+    @Override
+    public String toString() { return this.customerName; }
+
     public String getCustomerID(){
         return customerID;
     }

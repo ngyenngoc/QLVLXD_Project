@@ -23,7 +23,6 @@ public class SalesOrderController {
     @FXML private Label lblDetailDate;
     @FXML private ComboBox<Customer> cbCustomer; // Đổi từ lblDetailPartner sang cb nếu muốn chọn
     @FXML private ComboBox<Material> cbMaterial;
-    @FXML private ComboBox<String> cbPaymentMethod;
     @FXML private TextArea txtNotes;
     @FXML private TextField txtTotalAmount;
     @FXML private TextField txtQuantity;
@@ -37,6 +36,10 @@ public class SalesOrderController {
     @FXML private TableColumn<SalesOrder, BigDecimal> colAmount;
     @FXML private TableColumn<SalesOrder, String> colNote;
 
+    @FXML private TableColumn<SalesOrder, String> colType; // Cột Tên vật liệu
+    @FXML private TableColumn<SalesOrder, Integer> colPartner; // Cột Số lượng
+    @FXML private TableColumn<SalesOrder, BigDecimal> colStatus; // Cột Giá bán
+
     private SalesOrderDAO orderDAO = new SalesOrderDAO();
     private MaterialDAO materialDAO = new MaterialDAO();
     private CustomerDAO customerDAO = new CustomerDAO();
@@ -48,31 +51,99 @@ public class SalesOrderController {
         initTables();
         loadData();
 
-        // Tự động điền giá khi chọn vật liệu
+        // 1. Sự kiện chọn dòng trên bảng: Đổ dữ liệu xuống Form
+        tvOrders.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                showOrderDetail(newVal);
+            }
+        });
+
+        // 2. Tự động điền giá và tính tiền khi chọn vật liệu
         cbMaterial.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 txtPrice.setText(newVal.getSalePrice().toString());
+                calculateTotal();
             }
         });
+
+        // 3. Tự động tính tiền khi gõ số lượng
+        txtQuantity.textProperty().addListener((o, ov, nv) -> calculateTotal());
 
         handleClear();
     }
 
     private void initTables() {
-        // Ánh xạ cột cho tvOrders theo đúng tên thuộc tính trong model SalesOrder
         colId.setCellValueFactory(new PropertyValueFactory<>("orderID"));
         colDate.setCellValueFactory(new PropertyValueFactory<>("orderDateStr"));
         colCustomerName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         colAmount.setCellValueFactory(new PropertyValueFactory<>("totalAmount"));
         colNote.setCellValueFactory(new PropertyValueFactory<>("notes"));
 
+        // Ánh xạ cho các cột chi tiết dựa trên fx:id trong FXML của bạn
+        colType.setCellValueFactory(new PropertyValueFactory<>("materialName"));  // Cột Tên vật liệu
+        colPartner.setCellValueFactory(new PropertyValueFactory<>("quantity"));  // Cột Số lượng
+        colStatus.setCellValueFactory(new PropertyValueFactory<>("salePrice"));  // Cột Giá bán
+
         tvOrders.setItems(listOrders);
+    }
+
+    private void showOrderDetail(SalesOrder order) {
+        lblDetailID.setText(order.getOrderID());
+        lblDetailDate.setText(order.getOrderDateStr());
+        txtNotes.setText(order.getNotes());
+        txtTotalAmount.setText(order.getTotalAmount().toString());
+
+        txtQuantity.setText(String.valueOf(order.getQuantity()));
+        txtPrice.setText(order.getSalePrice().toString());
+
+        // Chọn đúng Khách hàng trong ComboBox
+        for (Customer c : cbCustomer.getItems()) {
+            if (c.getCustomerID().equals(order.getCustomerID())) {
+                cbCustomer.setValue(c);
+                break;
+            }
+        }
+
+        // Chọn đúng Vật liệu trong ComboBox
+        for (Material m : cbMaterial.getItems()) {
+            if (m.getMaterialID().equals(order.getMaterialID())) {
+                cbMaterial.setValue(m);
+                break;
+            }
+        }
+    }
+
+    private void calculateTotal() {
+        try {
+            BigDecimal qty = new BigDecimal(txtQuantity.getText().isEmpty() ? "0" : txtQuantity.getText());
+            BigDecimal price = new BigDecimal(txtPrice.getText().isEmpty() ? "0" : txtPrice.getText());
+            txtTotalAmount.setText(qty.multiply(price).toString());
+        } catch (Exception e) {
+            txtTotalAmount.setText("0");
+        }
+    }
+
+    @FXML
+    private void handleSearch() {
+        String keyword = txtSearch.getText().toLowerCase().trim();
+        if (keyword.isEmpty()) {
+            tvOrders.setItems(listOrders);
+            return;
+        }
+
+        ObservableList<SalesOrder> filteredList = FXCollections.observableArrayList();
+        for (SalesOrder order : listOrders) {
+            if (order.getCustomerName().toLowerCase().contains(keyword) ||
+                    order.getOrderID().toLowerCase().contains(keyword)) {
+                filteredList.add(order);
+            }
+        }
+        tvOrders.setItems(filteredList);
     }
 
     private void loadData() {
         cbCustomer.setItems(FXCollections.observableArrayList(customerDAO.getAll()));
         cbMaterial.setItems(FXCollections.observableArrayList(materialDAO.getAll()));
-        cbPaymentMethod.setItems(FXCollections.observableArrayList("Tiền mặt", "Chuyển khoản"));
         listOrders.setAll(orderDAO.getAll());
     }
 
@@ -93,7 +164,6 @@ public class SalesOrderController {
                 cbCustomer.getValue().getCustomerID(),
                 cbCustomer.getValue().getCustomerName(),
                 1,
-                cbPaymentMethod.getValue(),
                 txtNotes.getText(),
                 new BigDecimal(txtTotalAmount.getText())
         );
@@ -128,6 +198,9 @@ public class SalesOrderController {
         alert.setContentText(content);
         alert.showAndWait();
     }
+
+    @FXML private TextField txtSearch; // Ô nhập từ khóa tìm kiếm
+
 
     @FXML private void handleDelete() {} // Khai báo để tránh lỗi FXML action
     @FXML private void handleUpdate() {}

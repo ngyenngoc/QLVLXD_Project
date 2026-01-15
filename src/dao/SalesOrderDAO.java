@@ -21,9 +21,8 @@ public class SalesOrderDAO {
                 ps.setDate(2, java.sql.Date.valueOf(order.getOrderDate()));
                 ps.setString(3, order.getCustomerID());
                 ps.setInt(4, order.getUserID());
-                ps.setString(5, order.getPaymentMethod());
-                ps.setString(6, order.getNotes());
-                ps.setBigDecimal(7, order.getTotalAmount());
+                ps.setString(5, order.getNotes());
+                ps.setBigDecimal(6, order.getTotalAmount());
                 ps.executeUpdate();
             }
 
@@ -41,21 +40,33 @@ public class SalesOrderDAO {
 
     public List<SalesOrder> getAll() {
         List<SalesOrder> list = new ArrayList<>();
-        String sql = "SELECT o.*, c.customerName FROM SalesOrder o JOIN Customer c ON o.customerID = c.customerID";
+        // Truy vấn lấy đủ thông tin từ bảng cha và bảng con
+        String sql = "SELECT o.*, c.customerName, d.materialID, m.materialName, d.quantity, d.salePrice " +
+                "FROM SalesOrder o " +
+                "JOIN Customer c ON o.customerID = c.customerID " +
+                "JOIN SalesOrderDetail d ON o.orderID = d.orderID " +
+                "JOIN Material m ON d.materialID = m.materialID";
+
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                list.add(new SalesOrder(
+                SalesOrder order = new SalesOrder(
                         rs.getString("orderID"),
                         rs.getDate("orderDate").toLocalDate(),
                         rs.getString("customerID"),
                         rs.getString("customerName"),
                         rs.getInt("userID"),
-                        rs.getString("paymentMethod"),
                         rs.getString("notes"),
                         rs.getBigDecimal("totalAmount")
-                ));
+                );
+                // Gán dữ liệu bổ sung vào model để hiển thị lên bảng
+                order.setMaterialID(rs.getString("materialID"));
+                order.setMaterialName(rs.getString("materialName"));
+                order.setQuantity(rs.getInt("quantity"));
+                order.setSalePrice(rs.getBigDecimal("salePrice"));
+
+                list.add(order);
             }
         } catch (SQLException e) { e.printStackTrace(); }
         return list;

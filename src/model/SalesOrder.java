@@ -10,17 +10,19 @@ public class SalesOrder {
     private String customerID;
     private String customerName;   // dùng để JOIN hiển thị
     private int userID;
-    private String paymentMethod;
     private String notes;
     private BigDecimal totalAmount;
+    private String materialID;
+    private String materialName;
+    private int quantity;
+    private BigDecimal salePrice;
 
-    public SalesOrder(String orderID, LocalDate orderDate, String customerID, String customerName, int userID, String paymentMethod, String notes, BigDecimal totalAmount) {
+    public SalesOrder(String orderID, LocalDate orderDate, String customerID, String customerName, int userID, String notes, BigDecimal totalAmount) {
         this.orderID = orderID;
         this.orderDate = orderDate;
         this.customerID = customerID;
         this.customerName = customerName;
         this.userID = userID;
-        this.paymentMethod = paymentMethod;
         this.notes = notes;
         this.totalAmount = totalAmount;
     }
@@ -51,9 +53,6 @@ public class SalesOrder {
         return userID;
     }
 
-    public String getPaymentMethod() {
-        return paymentMethod;
-    }
 
     public String getNotes() {
         return notes;
@@ -84,10 +83,6 @@ public class SalesOrder {
         this.userID = userID;
     }
 
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
     public void setNotes(String notes) {
         this.notes = notes;
     }
@@ -95,4 +90,13 @@ public class SalesOrder {
     public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
     }
+
+    public String getMaterialID() { return materialID; }
+    public void setMaterialID(String materialID) { this.materialID = materialID; }
+    public String getMaterialName() { return materialName; }
+    public void setMaterialName(String materialName) { this.materialName = materialName; }
+    public int getQuantity() { return quantity; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }
+    public BigDecimal getSalePrice() { return salePrice; }
+    public void setSalePrice(BigDecimal salePrice) { this.salePrice = salePrice; }
 }

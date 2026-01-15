@@ -23,6 +23,10 @@ public class Material {
         this.categoryID = categoryID;
         this.categoryName = categoryName;
     }
+
+    @Override
+    public String toString() { return this.materialName; }
+
     public String getMaterialID(){
         return materialID;
     }
