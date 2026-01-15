@@ -14,7 +14,7 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException {
         // Tải FXML từ package 'view'
         // Lưu ý: Cấu trúc này giả định file nằm trong thư mục view/
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/MainWindow.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/UsersView.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load(), 1000, 700); // Kích thước lớn hơn cho đồ án
 

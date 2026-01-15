@@ -9,7 +9,10 @@ public class MaterialDAO {
 
     public List<Material> getAll() {
         List<Material> list = new ArrayList<>();
-        String sql = "SELECT * FROM Material";
+        // CÂU LỆNH SQL KẾT NỐI 2 BẢNG
+        String sql = "SELECT m.*, c.categoryName " +
+                "FROM Material m " +
+                "JOIN Category c ON m.categoryID = c.categoryID";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -22,7 +25,8 @@ public class MaterialDAO {
                         rs.getBigDecimal("salePrice"),
                         rs.getInt("stockQuantity"),
                         rs.getString("description"),
-                        rs.getInt("categoryID")
+                        rs.getInt("categoryID"),
+                        rs.getString("categoryName")
                 ));
             }
         } catch (SQLException e) { e.printStackTrace(); }
@@ -74,7 +78,7 @@ public class MaterialDAO {
         } catch (SQLException e) { return false; }
     }
 
-    // PHƯƠNG THỨC THIẾU: Tự động sinh mã vật liệu
+    // PHƯƠNG THỨC THIẾU Tự động sinh mã vật liệu
     public String generateNewID() {
         String sql = "SELECT MAX(CAST(SUBSTRING(materialID, 3, LEN(materialID)) AS INT)) FROM Material";
         try (Connection conn = DatabaseConnection.getConnection();

@@ -11,93 +11,101 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<BorderPane fx:controller="controller.CustomerController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+    <top>
+        <HBox prefHeight="59.0" prefWidth="1200.0" spacing="10.0" style="-fx-background-color: linear-gradient(to right, #1F4E79, #2E5E8C);" BorderPane.alignment="CENTER">
+            <children>
+                <Label prefHeight="50.0" prefWidth="300.0" style="-fx-text-fill: white; -fx-font-size: 22; -fx-font-weight: bold;" text="QUẢN LÝ KHÁCH HÀNG">
+                    <font>
+                        <Font name="System Bold" size="20.0" />
+                    </font>
+                </Label>
+            </children>
+            <padding>
+                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+            </padding>
+        </HBox>
+    </top>
+    <left>
+        <VBox prefHeight="638.0" prefWidth="326.0" spacing="12.0" style="-fx-background-color: #F4F4F4; -fx-border-color: #DADDE1; -fx-border-radius: 6; -fx-Padding: 15; -fx-background-radius: 6;" BorderPane.alignment="CENTER">
+            <children>
+                <Label style="-fx-text-fill: #1F4E79;" text="THÔNG TIN KHÁCH HÀNG">
+                    <font>
+                        <Font name="System Bold" size="16.0" />
+                    </font>
+                </Label>
+                <Label text="Mã khách hàng" />
+                <TextField fx:id="txtCustomerID" promptText="Mã tự động" style="-fx-background-color: #f4f4f4; -fx-border-color: gray; -fx-border-radius: 5;" />
+                <Label text="Tên khách hàng" />
+                <TextField fx:id="txtCustomerName" promptText="Nhập tên khách hàng" style="-fx-background-color: #f4f4f4; -fx-border-color: gray; -fx-border-radius: 5;" />
+                <Label text="Địa chỉ" />
+                <TextField fx:id="txtAddress" promptText="Nhập địa chỉ" style="-fx-background-color: #f4f4f4; -fx-border-color: gray; -fx-border-radius: 5;" />
+                <Label text="Số điện thoại" />
+                <TextField fx:id="txtPhoneNumber" promptText="Nhập số điện thoại" style="-fx-background-color: #f4f4f4; -fx-border-color: gray; -fx-border-radius: 5;" />
+                <Label text="Email" />
+                <TextField fx:id="txtEmail" promptText="Nhập email" style="-fx-background-color: #f4f4f4; -fx-border-color: gray; -fx-border-radius: 5;" />
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
-   <top>
-      <HBox prefHeight="59.0" prefWidth="1200.0" spacing="10.0" style="-fx-background-color: linear-gradient(to right, #1F4E79, #2E5E8C);" BorderPane.alignment="CENTER">
-         <children>
-            <Label prefHeight="50.0" prefWidth="300.0" style="-fx-text-fill: white; -fx-font-size: 22; -fx-font-weight: bold;" text="QUẢN LÝ KHÁCH HÀNG">
-               <font>
-                  <Font name="System Bold" size="20.0" />
-               </font>
-            </Label>
-         </children>
-         <padding>
-            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-         </padding>
-      </HBox>
-   </top>
-   <left>
-      <VBox prefHeight="638.0" prefWidth="326.0" spacing="12.0" style="-fx-background-color: #F4F4F4; -fx-border-color: #DADDE1; -fx-border-radius: 6; -fx-Padding: 15; -fx-background-radius: 6;" BorderPane.alignment="CENTER">
-         <children>
-            <Label style="-fx-text-fill: #1F4E79;" text="THÔNG TIN KHÁCH HÀNG">
-               <font>
-                  <Font name="System Bold" size="16.0" />
-               </font>
-            </Label>
-            <Label text="Mã khách hàng" />
-            <TextField promptText="Mã tự động" style="-fx-background-color: #f4f4f4; -fx-border-color: gray; -fx-border-radius: 5;" />
-            <Label text="Tên khách hàng" />
-            <TextField promptText="Nhập tên khách hàng" style="-fx-background-color: #f4f4f4; -fx-border-color: gray; -fx-border-radius: 5;" />
-            <Label text="Địa chỉ" />
-            <TextField promptText="Nhập địa chỉ" style="-fx-background-color: #f4f4f4; -fx-border-color: gray; -fx-border-radius: 5;" />
-            <Label text="Số điện thoại" />
-            <TextField promptText="Nhập số điện thoại" style="-fx-background-color: #f4f4f4; -fx-border-color: gray; -fx-border-radius: 5;" />
-            <Label text="Email" />
-            <TextField promptText="Nhập email" style="-fx-background-color: #f4f4f4; -fx-border-color: gray; -fx-border-radius: 5;" />
-            <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
-               <padding>
-                  <Insets top="40.0" />
-               </padding>
-               <children>
-                  <Button mnemonicParsing="false" style="-fx-background-color: #1F4E79; -fx-text-fill: white; -fx-font-weight: bold;" text="➕ Thêm" />
-                  <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="57.0" style="-fx-background-color: #607D8B; -fx-text-fill: white;" text="Sửa">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </Button>
-                  <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="51.0" style="-fx-background-color: #C62828; -fx-text-fill: white;" text="Xóa">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </Button>
-                  <Button mnemonicParsing="false" style="-fx-background-color: #6FBF73; -fx-text-fill: white;" text="Làm mới">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </Button>
-               </children>
-            </HBox>
-         </children>
-         <padding>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-         </padding>
-      </VBox>
-   </left>
-   <center>
-      <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: #dcdcdc; -fx-border-width: 1 0 0 0;" BorderPane.alignment="CENTER">
-         <children>
-            <Label prefHeight="46.0" prefWidth="953.0" style="-fx-text-fill: #1F4E79; -fx-background-color: #F4F4F4;" text="DANH SÁCH KHÁCH HÀNG">
-               <font>
-                  <Font name="System Bold" size="16.0" />
-               </font>
-               <padding>
-                  <Insets bottom="10.0" left="15.0" top="10.0" />
-               </padding>
-            </Label>
-            <TableView prefHeight="200.0" prefWidth="200.0" style="-fx-table-cell-border-color: #d3d3d3; -fx-background-color: #F4F4F4; -fx-table-header-border-color: #d3d3d3; -fx-table-cell-border-width: 0 1 1 0; -fx-box-definition: 0.5px;">
-              <columns>
-                <TableColumn prefWidth="75.0" style="-fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 5;" text="Mã KH" />
-                <TableColumn prefWidth="75.0" style="-fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 5;" text="Tên khách hàng" />
-                  <TableColumn prefWidth="75.0" style="-fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 5;" text="Địa chỉ" />
-                  <TableColumn prefWidth="75.0" style="-fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 5;" text="Số điện thoại" />
-                  <TableColumn prefWidth="75.0" style="-fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 5;" text="Email" />
-              </columns>
-               <columnResizePolicy>
-                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy>
-            </TableView>
-         </children>
-      </VBox>
-   </center>
+                <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                    <padding>
+                        <Insets top="40.0" />
+                    </padding>
+                    <children>
+                        <Button fx:id="btnAdd" onAction="#handleAddCustomer" style="-fx-background-color: #1F4E79; -fx-text-fill: white; -fx-font-weight: bold;" text="➕ Thêm" />
+                        <Button fx:id="btnUpdate" onAction="#handleUpdateCustomer" prefHeight="26.0" prefWidth="57.0" style="-fx-background-color: #607D8B; -fx-text-fill: white;" text="Sửa">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
+                        </Button>
+                        <Button fx:id="btnDelete" onAction="#handleDeleteCustomer" prefHeight="26.0" prefWidth="51.0" style="-fx-background-color: #C62828; -fx-text-fill: white;" text="Xóa">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
+                        </Button>
+                        <Button fx:id="btnRefresh" onAction="#loadCustomerData" style="-fx-background-color: #6FBF73; -fx-text-fill: white;" text="Làm mới">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
+                        </Button>
+                    </children>
+                </HBox>
+
+                <Label fx:id="lblMessage" textFill="RED" wrapText="true">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+
+            </children>
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+        </VBox>
+    </left>
+    <center>
+        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: #dcdcdc; -fx-border-width: 1 0 0 0;" BorderPane.alignment="CENTER">
+            <children>
+                <Label prefHeight="46.0" prefWidth="953.0" style="-fx-text-fill: #1F4E79; -fx-background-color: #F4F4F4;" text="DANH SÁCH KHÁCH HÀNG">
+                    <font>
+                        <Font name="System Bold" size="16.0" />
+                    </font>
+                    <padding>
+                        <Insets bottom="10.0" left="15.0" top="10.0" />
+                    </padding>
+                </Label>
+
+                <TableView fx:id="tblCustomer" prefHeight="200.0" prefWidth="200.0" style="-fx-table-cell-border-color: #d3d3d3; -fx-background-color: #F4F4F4; -fx-table-header-border-color: #d3d3d3; -fx-table-cell-border-width: 0 1 1 0; -fx-box-definition: 0.5px;">
+                    <columns>
+                        <TableColumn fx:id="colID" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 5;" text="Mã KH" />
+                        <TableColumn fx:id="colName" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 5;" text="Tên khách hàng" />
+                        <TableColumn fx:id="colAddress" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 5;" text="Địa chỉ" />
+                        <TableColumn fx:id="colPhone" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 5;" text="Số điện thoại" />
+                        <TableColumn fx:id="colEmail" prefWidth="75.0" style="-fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 5;" text="Email" />
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                </TableView>
+            </children>
+        </VBox>
+    </center>
 </BorderPane>

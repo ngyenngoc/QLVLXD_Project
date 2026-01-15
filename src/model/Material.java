@@ -10,8 +10,9 @@ public class Material {
     private int stockQuantity;
     private String description;
     private int categoryID;
+    private String categoryName;
 
-    public Material(String materialID, String materialName, String unit, BigDecimal purchasePrice, BigDecimal salePrice,int stockQuantity, String description, int categoryID) {
+    public Material(String materialID, String materialName, String unit, BigDecimal purchasePrice, BigDecimal salePrice,int stockQuantity, String description, int categoryID, String categoryName) {
         this.materialID = materialID;
         this.materialName = materialName;
         this.unit = unit;
@@ -20,6 +21,7 @@ public class Material {
         this.stockQuantity = stockQuantity;
         this.description = description;
         this.categoryID = categoryID;
+        this.categoryName = categoryName;
     }
     public String getMaterialID(){
         return materialID;
@@ -51,6 +53,7 @@ public class Material {
     public int getCategoryID() {
         return categoryID;
     }
+    public String getCategoryName(){return categoryName;}
 
     public void setMaterialID(String materialID) {
         this.materialID = materialID;
@@ -84,4 +87,5 @@ public class Material {
     public void setCategoryID(int categoryID) {
         this.categoryID = categoryID;
     }
+    public void setCategoryName(String categoryName){this.categoryName = categoryName;}
 }

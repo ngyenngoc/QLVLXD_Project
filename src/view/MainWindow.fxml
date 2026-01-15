@@ -13,9 +13,13 @@
                 </Menu>
                 <Menu text="Quản Lý">
                     <items>
-                        <MenuItem fx:id="menuMaterial" onAction="#handleShowSupplier" text="Vật Liệu" />
-                        <MenuItem text="Đơn Hàng Nhập" />
+                        <MenuItem fx:id="menuMaterial" onAction="#handleShowMaterial" text="Vật Liệu" />
+                        <MenuItem onAction = "#handleShowCategory" text="Loại vật liệu" />
+                        <MenuItem onAction = "#handleShowSupplier" text="Nhà cung cấp" />
+                        <MenuItem onAction = "#handleShowCustomer" text="Khách hàng" />
+                        <MenuItem onAction = "#handleShowSalesOrder" text="Đơn hàng bán" />
                     </items>
+
                 </Menu>
             </menus>
         </MenuBar>

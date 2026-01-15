@@ -81,7 +81,7 @@ public class SupplierController {
     private void handleUpdateSupplier(){
     Supplier selectedSupplier = tblSupplier.getSelectionModel().getSelectedItem();
     if (selectedSupplier == null){
-        lblMessage.setText("Vui lòng chọn một khách hàng trong danh sách để sửa");
+        lblMessage.setText("Vui lòng chọn một nhà cung cấp trong danh sách để sửa");
         return;
     }
     Supplier updatedSupplier = new Supplier(
@@ -114,7 +114,7 @@ public class SupplierController {
                 clearForm();
             }
             else{
-                lblMessage.setText("Đã xóa khách hàng!");
+                lblMessage.setText("Đã xóa nhà cung cấp!");
             }
         }
     }

@@ -1,40 +1,54 @@
 package model;
+
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 public class SalesOrder {
     private String orderID;
+    private LocalDate orderDate;
     private String customerID;
-    private String adminID;
+    private String customerName;   // dùng để JOIN hiển thị
+    private int userID;
     private String paymentMethod;
     private String notes;
     private BigDecimal totalAmount;
-    private BigDecimal discountAmount;
-    private BigDecimal vatAmount;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    public SalesOrder(String orderID,String customerID,String adminID,String paymentMethod,String notes,BigDecimal totalAmount,BigDecimal discountAmount,BigDecimal vatAmount, LocalDateTime createAt,LocalDateTime updateAt){
+
+    public SalesOrder(String orderID, LocalDate orderDate, String customerID, String customerName, int userID, String paymentMethod, String notes, BigDecimal totalAmount) {
         this.orderID = orderID;
+        this.orderDate = orderDate;
         this.customerID = customerID;
-        this.adminID = adminID;
+        this.customerName = customerName;
+        this.userID = userID;
         this.paymentMethod = paymentMethod;
         this.notes = notes;
         this.totalAmount = totalAmount;
-        this.discountAmount = discountAmount;
-        this.vatAmount = vatAmount;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     public String getOrderID() {
         return orderID;
     }
 
+    public LocalDate getOrderDate() {
+        return orderDate;
+    }
+
+    public String getOrderDateStr() {
+        return orderDate != null
+                ? orderDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                : "";
+    }
+
     public String getCustomerID() {
         return customerID;
     }
 
-    public String getAdminID() {
-        return adminID;
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public int getUserID() {
+        return userID;
     }
 
     public String getPaymentMethod() {
@@ -49,32 +63,25 @@ public class SalesOrder {
         return totalAmount;
     }
 
-    public BigDecimal getDiscountAmount() {
-        return discountAmount;
-    }
-
-    public BigDecimal getVatAmount() {
-        return vatAmount;
-    }
-
-    public LocalDateTime getCreateAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getUpdateAt() {
-        return updatedAt;
-    }
 
     public void setOrderID(String orderID) {
         this.orderID = orderID;
+    }
+
+    public void setOrderDate(LocalDate orderDate) {
+        this.orderDate = orderDate;
     }
 
     public void setCustomerID(String customerID) {
         this.customerID = customerID;
     }
 
-    public void setAdminID(String adminID) {
-        this.adminID = adminID;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
 
     public void setPaymentMethod(String paymentMethod) {
@@ -87,21 +94,5 @@ public class SalesOrder {
 
     public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
-    }
-
-    public void setDiscountAmount(BigDecimal discountAmount) {
-        this.discountAmount = discountAmount;
-    }
-
-    public void setVatAmount(BigDecimal vatAmount) {
-        this.vatAmount = vatAmount;
-    }
-
-    public void setCreatedAt(LocalDateTime createAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updateAt) {
-        this.updatedAt = updatedAt;
     }
 }

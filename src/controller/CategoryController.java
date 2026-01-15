@@ -36,7 +36,6 @@ public class CategoryController {
         tblCategory.setItems(categoryList);
         loadCategoryData();
 
-        setupEventHandlers();
         // Gán sự kiện khi click vào dòng trong bảng
         tblCategory.getSelectionModel().selectedItemProperty().addListener(
                 (obs, oldSelection, newSelection) -> {
@@ -58,13 +57,21 @@ public class CategoryController {
     //Xử lý CRUD
     @FXML
     private void handleAddCategory() {
-        Category newCategory = new Category(0, txtCategoryName.getText(), txtDescription.getText());
+        if (txtCategoryID.getText().isEmpty() || txtCategoryName.getText().isEmpty()) {
+            lblMessage.setText("Lỗi: Vui lòng nhập Mã loại và Tên loại!");
+            return;
+        }
+        try{int id = Integer.parseInt(txtCategoryID.getText());
+        Category newCategory = new Category(id, txtCategoryName.getText(), txtDescription.getText());
         if (dao.insert(newCategory)) {
             lblMessage.setText(" Thêm loại vật liệu " + newCategory.getCategoryName() + " thành công!");
             loadCategoryData();
             clearForm();
         } else {
             lblMessage.setText("Lỗi: Không thể thêm loại vật liệu!");
+        }
+        } catch (NumberFormatException e) {
+            lblMessage.setText("Lỗi: Mã loại phải là số nguyên!");
         }
     }
     @FXML
@@ -74,14 +81,20 @@ public class CategoryController {
             lblMessage.setText("Vui lòng chọn một loại vật liệu trong danh sách để sửa");
             return;
         }
+        if (txtCategoryName.getText().isEmpty()) {
+            lblMessage.setText("Lỗi: Tên không được để trống!");
+            return;
+        }
+
         Category updatedCategory = new Category(
-                Integer.parseInt(txtCategoryID.getText()), txtCategoryName.getText(), txtDescription.getText());
+                selectedCategory.getCategoryID(), txtCategoryName.getText(), txtDescription.getText());
         if (dao.update(updatedCategory)) {
             lblMessage.setText("Cập nhật thông tin loại vật liệu thành công!");
             int index = categoryList.indexOf(selectedCategory);
             if (index != -1) {
                 categoryList.set(index, updatedCategory);
             }
+            clearForm();
         } else {
             lblMessage.setText("Lỗi: Cập nhật thất bại!");
         }
@@ -93,20 +106,22 @@ public class CategoryController {
                 lblMessage.setText("Vui lòng chọn loại vật liệu cần xóa");
                 return;
             }
-            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Bạn có chắc chắn muốn xóa loại vật liệu " +selectedCategory.getCategoryName() + "?");
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Bạn có chắc chắn muốn xóa: " + selectedCategory.getCategoryName() + "?");
+            confirm.setHeaderText("Xác nhận xóa");
             Optional<ButtonType> result = confirm.showAndWait();
-            if(result.isPresent() && result.get() == ButtonType.OK){
-                if (dao.delete(selectedCategory.getCategoryID())){
-                    lblMessage.setText("Đã xóa loại vật liệu " + selectedCategory.getCategoryName() + " thành công");
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                if (dao.delete(selectedCategory.getCategoryID())) {
+                    lblMessage.setText("Đã xóa thành công!");
                     categoryList.remove(selectedCategory);
                     clearForm();
-                }
-                else{
-                    lblMessage.setText("Đã xóa loại vật liệu!");
+                } else {
+                    lblMessage.setText("Lỗi: Không thể xóa (Có thể dữ liệu đang được sử dụng ở bảng khác).");
                 }
             }
         }
-        private void displayDetails(Category category){
+
+    private void displayDetails(Category category){
             txtCategoryID.setText(String.valueOf(category.getCategoryID()));
             txtCategoryName.setText(category.getCategoryName());
             txtDescription.setText(category.getDescription());
@@ -116,6 +131,7 @@ public class CategoryController {
             txtCategoryID.clear();
             txtCategoryName.clear();
             txtDescription.clear();
+            tblCategory.getSelectionModel().clearSelection();
 
     }
 }

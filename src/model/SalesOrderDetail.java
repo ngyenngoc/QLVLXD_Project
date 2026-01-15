@@ -3,41 +3,37 @@ package model;
 import java.math.BigDecimal;
 
 public class SalesOrderDetail {
-    private String orderID;
-    private String productID;
-    private int quantity;
-    private BigDecimal unitPrice;
-    private BigDecimal discountAmount;
-    private BigDecimal vatAmount;
-    private BigDecimal lineTotal;
 
-    // Constructor đầy đủ tham số
-    public SalesOrderDetail(String orderID, String productID, int quantity, BigDecimal unitPrice,
-                            BigDecimal discountAmount, BigDecimal vatAmount, BigDecimal lineTotal) {
+    private int detailID;
+    private String orderID;
+    private String materialID;
+    private String materialName;
+    private int quantity;
+    private BigDecimal salePrice;
+
+    public SalesOrderDetail(int detailID, String orderID, String materialID, String materialName, int quantity, BigDecimal salePrice) {
+        this.detailID = detailID;
         this.orderID = orderID;
-        this.productID = productID;
+        this.materialID = materialID;
+        this.materialName = materialName;
         this.quantity = quantity;
-        this.unitPrice = unitPrice;
-        this.discountAmount = discountAmount;
-        this.vatAmount = vatAmount;
-        this.lineTotal = lineTotal;
+        this.salePrice = salePrice;
+    }
+    public int getDetailID() { return detailID; }
+    public String getOrderID() { return orderID; }
+    public String getMaterialID() { return materialID; }
+    public String getMaterialName() { return materialName; }
+    public int getQuantity() { return quantity; }
+    public BigDecimal getSalePrice() { return salePrice; }
+    public BigDecimal getSubTotal() {
+        if (salePrice == null) return BigDecimal.ZERO;
+        return salePrice.multiply(BigDecimal.valueOf(quantity));
     }
 
-    // --- CÁC HÀM LẤY DỮ LIỆU (GETTER) ---
-    public String getOrderID() { return orderID; }
-    public String getProductID() { return productID; }
-    public int getQuantity() { return quantity; }
-    public BigDecimal getUnitPrice() { return unitPrice; }
-    public BigDecimal getDiscountAmount() { return discountAmount; }
-    public BigDecimal getVatAmount() { return vatAmount; }
-    public BigDecimal getLineTotal() { return lineTotal; }
-
-    // --- CÁC HÀM GÁN DỮ LIỆU (SETTER) ---
+    public void setDetailID(int detailID) { this.detailID = detailID; }
     public void setOrderID(String orderID) { this.orderID = orderID; }
-    public void setProductID(String productID) { this.productID = productID; }
+    public void setMaterialID(String materialID) { this.materialID = materialID; }
+    public void setMaterialName(String materialName) { this.materialName = materialName; }
     public void setQuantity(int quantity) { this.quantity = quantity; }
-    public void setUnitPrice(BigDecimal unitPrice) { this.unitPrice = unitPrice; }
-    public void setDiscountAmount(BigDecimal discountAmount) { this.discountAmount = discountAmount; }
-    public void setVatAmount(BigDecimal vatAmount) { this.vatAmount = vatAmount; }
-    public void setLineTotal(BigDecimal lineTotal) { this.lineTotal = lineTotal; }
+    public void setSalePrice(BigDecimal salePrice) { this.salePrice = salePrice; }
 }

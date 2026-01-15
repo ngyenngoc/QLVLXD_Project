@@ -35,7 +35,7 @@
                     </font>
                 </Label>
                 <Label text="Mã loại" />
-                <TextField fx:id="txtCategoryID" editable="false" promptText="Mã tự động" style="-fx-background-color: #f4f4f4; -fx-border-color: gray; -fx-border-radius: 5;" />
+                <TextField fx:id="txtCategoryID" promptText="Nhập mã số (VD: 1, 2...)" style="-fx-background-color: white; -fx-border-color: gray; -fx-border-radius: 5;" />
 
                 <Label text="Tên loại" />
                 <TextField fx:id="txtCategoryName" promptText="Nhập tên loại vật liệu" style="-fx-border-color: gray; -fx-border-radius: 5;" />

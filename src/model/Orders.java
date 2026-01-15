@@ -11,9 +11,11 @@ public class Orders {
     private BigDecimal totalAmount;
     private String orderStatus;
     private String notes;
+    private int userID;
+    private String partnerName;
 
     public Orders(int orderID, LocalDateTime orderDate, String orderType, String supplierID, String customerID,
-                 BigDecimal totalAmount, String orderStatus, String notes, LocalDateTime createdAt) {
+                  BigDecimal totalAmount, String orderStatus, String notes, int userID, String partnerName) {
         this.orderID = orderID;
         this.orderDate = orderDate;
         this.orderType = orderType;
@@ -22,6 +24,8 @@ public class Orders {
         this.totalAmount = totalAmount;
         this.orderStatus = orderStatus;
         this.notes = notes;
+        this.userID = userID;
+        this.partnerName = partnerName;
     }
 
     public int getOrderID() {
@@ -54,6 +58,13 @@ public class Orders {
     public String getNotes() {
         return notes;
     }
+    public int getUserID(){
+        return userID;
+    }
+
+    public String getPartnerName(){
+        return partnerName;
+    }
 
     public void setOrderID(int orderID) {
         this.orderID = orderID;
@@ -62,7 +73,7 @@ public class Orders {
     public void setOrderDate(LocalDateTime orderDate) {
         this.orderDate = orderDate;
     }
-    public void setOrderType(){
+    public void setOrderType(String orderType){
         this.orderType = orderType;
     }
 
@@ -84,5 +95,11 @@ public class Orders {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+    public void setUserID(int userID) {
+        this.userID = userID;
+    }
+    public void setPartnerName(String partnerName){
+        this.partnerName = partnerName;
     }
 }

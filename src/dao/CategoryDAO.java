@@ -25,7 +25,7 @@ public class CategoryDAO {
                         rs.getInt("categoryID"),
                         rs.getString("categoryName"),
                         rs.getString("description")
-                        ));
+                ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -35,12 +35,13 @@ public class CategoryDAO {
 
     // 2. Thêm mới một danh mục
     public boolean insert(Category c) {
-        String sql = "INSERT INTO Category ( CategoryName, description) VALUES (?, ?)";
+        String sql = "INSERT INTO Category (categoryID, CategoryName, description) VALUES (?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, c.getCategoryName());
-            ps.setString(2, c.getDescription());
+            ps.setInt(1, c.getCategoryID());
+            ps.setString(2, c.getCategoryName());
+            ps.setString(3, c.getDescription());
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
