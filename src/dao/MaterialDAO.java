@@ -9,10 +9,10 @@ public class MaterialDAO {
 
     public List<Material> getAll() {
         List<Material> list = new ArrayList<>();
-        // CÂU LỆNH SQL KẾT NỐI 2 BẢNG
-        String sql = "SELECT m.*, c.categoryName " +
+        String sql = "SELECT m.*, c.categoryName, s.supplierName " +
                 "FROM Material m " +
-                "JOIN Category c ON m.categoryID = c.categoryID";
+                "LEFT JOIN Category c ON m.categoryID = c.categoryID " +  // ← Có khoảng trắng
+                "LEFT JOIN Supplier s ON m.supplierID = s.supplierID";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -26,16 +26,20 @@ public class MaterialDAO {
                         rs.getInt("stockQuantity"),
                         rs.getString("description"),
                         rs.getInt("categoryID"),
-                        rs.getString("categoryName")
+                        rs.getString("categoryName"),
+                        rs.getString("supplierID"),
+                        rs.getString("supplierName")
                 ));
             }
         } catch (SQLException e) { e.printStackTrace(); }
         return list;
     }
 
+
     // Phương thức thêm mới vật liệu
     public boolean insert(Material m) {
-        String sql = "INSERT INTO Material (materialID, materialName, unit, purchasePrice, salePrice, stockQuantity, description, categoryID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Material (materialID, materialName, unit, purchasePrice, salePrice, stockQuantity, description, categoryID, supplierID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, m.getMaterialID());
@@ -46,6 +50,7 @@ public class MaterialDAO {
             ps.setInt(6, m.getStockQuantity());
             ps.setString(7, m.getDescription());
             ps.setInt(8, m.getCategoryID());
+            ps.setString(9, m.getSupplierID());
             return ps.executeUpdate() > 0;
         } catch (SQLException e)
         { return false; }
@@ -53,7 +58,7 @@ public class MaterialDAO {
 
 
     public boolean update(Material m) {
-        String sql = "UPDATE Material SET materialName=?, unit=?, purchasePrice=?, salePrice=?, stockQuantity=?, description=?, categoryID=? WHERE materialID=?";
+        String sql = "UPDATE Material SET materialName=?, unit=?, purchasePrice=?, salePrice=?, stockQuantity=?, description=?, categoryID=?, supplierID=? WHERE materialID=?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, m.getMaterialName());
@@ -63,7 +68,9 @@ public class MaterialDAO {
             ps.setInt(5, m.getStockQuantity());
             ps.setString(6, m.getDescription());
             ps.setInt(7, m.getCategoryID());
-            ps.setString(8, m.getMaterialID());
+            ps.setString(8, m.getSupplierID());
+            ps.setString(9, m.getMaterialID());
+
             return ps.executeUpdate() > 0;
         } catch (SQLException e) { return false; }
     }

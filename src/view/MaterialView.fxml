@@ -43,6 +43,8 @@
 
                 <Label text="Tên vật liệu" />
                 <TextField fx:id="txtMaterialName" promptText="Nhập tên vật liệu" style="-fx-border-color: #DADDE1; -fx-border-radius: 4; -fx-background-radius: 4;" />
+                <Label text="Nhà cung cấp" />
+                <ComboBox fx:id="cbSupplier" prefWidth="334.0" promptText="Chọn nhà cung cấp" style="-fx-border-color: #DADDE1; -fx-border-radius: 4; -fx-background-radius: 4;" />
 
                 <Label text="Đơn vị" />
                 <ComboBox fx:id="cbUnit" prefWidth="334.0" promptText="Chọn đơn vị" style="-fx-border-color: #DADDE1; -fx-border-radius: 4; -fx-background-radius: 4;" />
@@ -108,9 +110,10 @@
                 </Label>
                 <TableView fx:id="tblMaterial" fixedCellSize="30.0" style="-fx-table-cell-border-color: #d3d3d3; -fx-table-header-border-color: #d3d3d3; -fx-box-definition: 0.5px; -fx-table-cell-border-width: 0 1 1 0; -fx-background-color: #F4F4F4;" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colID" maxWidth="6000.0" minWidth="15.0" prefWidth="79.0" style="-fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 5;" text="Mã vật liệu" />
-                        <TableColumn fx:id="colCategoryName" prefWidth="150.0" style="-fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 5;" text="Loại vật liệu" />
+                        <TableColumn fx:id="colID" maxWidth="6000.0" minWidth="15.0" prefWidth="70.40002286434174" style="-fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 5;" text="Mã VL" />
+                        <TableColumn fx:id="colCategoryName" prefWidth="114.39997100830078" style="-fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 5;" text="Loại vật liệu" />
                         <TableColumn fx:id="colName" prefWidth="122.39996337890625" style="-fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 5;" text="Tên vật liệu" />
+                        <TableColumn fx:id="colSPLName" prefWidth="122.39996337890625" style="-fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 5;" text="Tên NCC" />
                         <TableColumn fx:id="colUnit" prefWidth="85.60003662109375" style="-fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 5;" text="Đơn vị" />
                         <TableColumn fx:id="colPurchase" prefWidth="107.19998168945312" style="-fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 5;" text="Giá nhập" />
                         <TableColumn fx:id="colSale" prefWidth="97.59994506835938" style="-fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 5;" text="Giá bán" />

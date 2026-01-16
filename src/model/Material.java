@@ -11,8 +11,10 @@ public class Material {
     private String description;
     private int categoryID;
     private String categoryName;
+    private String supplierID;
+    private String supplierName;
 
-    public Material(String materialID, String materialName, String unit, BigDecimal purchasePrice, BigDecimal salePrice,int stockQuantity, String description, int categoryID, String categoryName) {
+    public Material(String materialID, String materialName, String unit, BigDecimal purchasePrice, BigDecimal salePrice,int stockQuantity, String description, int categoryID, String categoryName, String supplierID, String supplierName) {
         this.materialID = materialID;
         this.materialName = materialName;
         this.unit = unit;
@@ -22,6 +24,8 @@ public class Material {
         this.description = description;
         this.categoryID = categoryID;
         this.categoryName = categoryName;
+        this.supplierID = supplierID;
+        this.supplierName = supplierName;
     }
 
     @Override
@@ -58,7 +62,8 @@ public class Material {
         return categoryID;
     }
     public String getCategoryName(){return categoryName;}
-
+    public String getSupplierID(){return supplierID;}
+    public String getSupplierName(){return supplierName;}
     public void setMaterialID(String materialID) {
         this.materialID = materialID;
     }
@@ -66,30 +71,29 @@ public class Material {
     public void setMaterialName(String materialName) {
         this.materialName = materialName;
     }
-
     public void setUnit(String unit) {
         this.unit = unit;
     }
-
     public void setPurchasePrice(BigDecimal purchasePrice) {
         this.purchasePrice = purchasePrice;
     }
-
     public void setSalePrice(BigDecimal salePrice) {
         this.salePrice = salePrice;
     }
-
     public void setStockQuantity(int stockQuantity) {
         this.stockQuantity = stockQuantity;
     }
-
-
     public void setDescription(String description) {
         this.description = description;
     }
-
     public void setCategoryID(int categoryID) {
         this.categoryID = categoryID;
     }
     public void setCategoryName(String categoryName){this.categoryName = categoryName;}
+    public void setSupplierID(String supplierID) {
+        this.supplierID = supplierID;
+    }
+    public void setSupplierName(String supplierName) {
+        this.supplierName = supplierName;
+    }
 }

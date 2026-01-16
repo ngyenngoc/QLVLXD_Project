@@ -2,6 +2,7 @@ package controller;
 
 import dao.CategoryDAO;
 import dao.MaterialDAO;
+import dao.SupplierDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -9,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Category;
 import model.Material;
+import model.Supplier;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -24,14 +26,18 @@ public class MaterialController {
     @FXML private ComboBox<Category> cbCategory;
     @FXML private ComboBox<String> cbUnit;
 
+    @FXML private TableColumn<Material, String> colSPLName;
+    @FXML private ComboBox<Supplier> cbSupplier;
+
     @FXML private Label lblMessage;
     @FXML private Button btnAdd, btnUpdate, btnDelete, btnRefresh;
 
     private final MaterialDAO dao = new MaterialDAO();
     private final CategoryDAO categoryDAO = new CategoryDAO(); // [THÊM MỚI] Để lấy danh sách loại
-
+    private final SupplierDAO supplierDAO = new SupplierDAO();
     private final ObservableList<Material> materialList = FXCollections.observableArrayList();
     private final ObservableList<Category> categoryList = FXCollections.observableArrayList(); // [THÊM MỚI] List cho ComboBox
+    private final ObservableList<Supplier> supplierList = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
@@ -56,6 +62,7 @@ public class MaterialController {
         colSale.setCellValueFactory(new PropertyValueFactory<>("salePrice"));
         colStock.setCellValueFactory(new PropertyValueFactory<>("stockQuantity"));
         colDesc.setCellValueFactory(new PropertyValueFactory<>("description"));
+        colSPLName.setCellValueFactory(new PropertyValueFactory<>("supplierName"));
 
         tblMaterial.setItems(materialList);
         handleloadMaterialData();
@@ -65,6 +72,8 @@ public class MaterialController {
                 (obs, oldSelection, newSelection) -> {
                     if (newSelection != null) displayDetails(newSelection);
                 });
+        supplierList.setAll(supplierDAO.getAll());
+        cbSupplier.setItems(supplierList);
     }
 
     @FXML
@@ -84,7 +93,7 @@ public class MaterialController {
 
         try {
             int catID = cbCategory.getValue().getCategoryID();
-
+            String SPLID = cbSupplier.getValue().getSupplierID();
             Material newMaterial = new Material(
                     dao.generateNewID(),
                     txtMaterialName.getText(),
@@ -94,6 +103,8 @@ public class MaterialController {
                     Integer.parseInt(txtStockQuantity.getText()),
                     txtDescription.getText(),
                     catID,
+                    "",
+                    SPLID,
                     ""
             );
 
@@ -125,7 +136,7 @@ public class MaterialController {
 
         try {
             int catID = cbCategory.getValue().getCategoryID();
-
+            String SPLID = cbSupplier.getValue().getSupplierID();
             Material updatedMaterial = new Material(
                     selectedMaterial.getMaterialID(), // Giữ ID cũ
                     txtMaterialName.getText(),
@@ -135,6 +146,8 @@ public class MaterialController {
                     Integer.parseInt(txtStockQuantity.getText()),
                     txtDescription.getText(),
                     catID, // ID loại mới
+                    "",
+                    SPLID,
                     ""
             );
 
@@ -195,8 +208,13 @@ public class MaterialController {
                 break;
             }
         }
-
-        lblMessage.setText("");
+        for (Supplier s : cbSupplier.getItems()) {
+            if (s.getSupplierID().equals(material.getSupplierID())) {
+                cbSupplier.setValue(s);
+                break;
+            }
+            lblMessage.setText("");
+        }
     }
 
     private void clearForm() {

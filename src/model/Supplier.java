@@ -14,7 +14,10 @@ public class Supplier {
         this.phoneNumber = phoneNumber;
         this.email = email;
     }
-
+    @Override
+    public String toString() {
+        return this.supplierName; // Trả về tên để hiển thị lên ComboBox
+    }
     public String getSupplierID() {
         return supplierID;
     }

@@ -19,7 +19,7 @@ public class SupplierController {
     @FXML private TextField txtSupplierID, txtSupplierName, txtAddress, txtPhoneNumber, txtEmail;
     @FXML
     private TableView<Supplier> tblSupplier;
-    @FXML private TableColumn<Supplier, String> colID, colName, colAddress, colPhone, colEmail;
+    @FXML private TableColumn<Supplier, String> colID, colSPLName, colAddress, colPhone, colEmail;
     @FXML private Label lblMessage;
     @FXML private Button btnAdd, btnUpdate, btnDelete, btnRefresh;
 
@@ -30,7 +30,7 @@ public class SupplierController {
     public void initialize() {
         // Ánh xạ cột bảng với thuộc tính của model Supplier
         colID.setCellValueFactory(new PropertyValueFactory<>("supplierID"));
-        colName.setCellValueFactory(new PropertyValueFactory<>("supplierName"));
+        colSPLName.setCellValueFactory(new PropertyValueFactory<>("supplierName"));
         colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
         colPhone.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));

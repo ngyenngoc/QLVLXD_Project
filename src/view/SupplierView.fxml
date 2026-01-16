@@ -94,7 +94,7 @@
                               <TableView fx:id="tblSupplier" style="-fx-table-cell-border-color: #d3d3d3; -fx-background-color: #F4F4F4; -fx-table-header-border-color: #d3d3d3; -fx-table-cell-border-width: 0 1 1 0; -fx-box-definition: 0.5px;" VBox.vgrow="ALWAYS">
                                 <columns>
                                   <TableColumn fx:id="colID" prefWidth="144.19998472929" style="-fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 5;" text="Mã NCC" />
-                                  <TableColumn fx:id="colName" prefWidth="206.2000274658203" style="-fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 5;" text="Tên nhà cung cấp" />
+                                  <TableColumn fx:id="colSPLName" prefWidth="206.2000274658203" style="-fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 5;" text="Tên nhà cung cấp" />
                                   <TableColumn fx:id="colAddress" prefWidth="200.0" style="-fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 5;" text="Địa chỉ" />
                                   <TableColumn fx:id="colPhone" prefWidth="120.0" style="-fx-alignment: CENTER-LEFT; -fx-padding: 0 0 0 5;" text="Số điện thoại" />
                                   <TableColumn fx:id="colEmail" prefWidth="150.0" style="-fx-padding: 0 0 0 5; -fx-alignment: CENTER-LEFT;" text="Email" />
