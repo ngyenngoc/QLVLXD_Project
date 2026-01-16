@@ -18,7 +18,6 @@ import java.time.LocalDate;
 
 public class SalesOrderController {
 
-    // Khớp fx:id từ FXML
     @FXML private Label lblDetailID;
     @FXML private Label lblDetailDate;
     @FXML private ComboBox<Customer> cbCustomer; // Đổi từ lblDetailPartner sang cb nếu muốn chọn
@@ -28,7 +27,6 @@ public class SalesOrderController {
     @FXML private TextField txtQuantity;
     @FXML private TextField txtPrice;
 
-    // Bảng danh sách hóa đơn (tvOrders)
     @FXML private TableView<SalesOrder> tvOrders;
     @FXML private TableColumn<SalesOrder, String> colId;
     @FXML private TableColumn<SalesOrder, String> colDate;
@@ -69,7 +67,53 @@ public class SalesOrderController {
         // 3. Tự động tính tiền khi gõ số lượng
         txtQuantity.textProperty().addListener((o, ov, nv) -> calculateTotal());
 
+        txtQuantity.textProperty().addListener((obs, oldVal, newVal) -> {
+            checkStockWarning(newVal);
+            calculateTotal();
+        });
+
+        // Kiểm tra lại nếu người dùng đổi vật liệu khác khi đã nhập số lượng
+        cbMaterial.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                txtPrice.setText(newVal.getSalePrice().toString());
+                checkStockWarning(txtQuantity.getText()); // Kiểm tra lại kho của vật liệu mới
+                calculateTotal();
+            }
+        });
+
         handleClear();
+
+        handleClear();
+    }
+
+    private void checkStockWarning(String quantityInput) {
+        Material selectedMaterial = cbMaterial.getValue();
+
+        // Nếu chưa chọn vật liệu hoặc ô số lượng trống thì không làm gì
+        if (selectedMaterial == null || quantityInput == null || quantityInput.isEmpty()) {
+            txtQuantity.setStyle(""); // Reset về mặc định
+            return;
+        }
+
+        try {
+            int qtyRequested = Integer.parseInt(quantityInput);
+            int currentStock = materialDAO.getCurrentStock(selectedMaterial.getMaterialID());
+
+            if (qtyRequested > currentStock) {
+                // Đổi màu nền hoặc viền đỏ để cảnh báo trực quan
+                txtQuantity.setStyle("-fx-border-color: red; -fx-control-inner-background: #ffcccc;");
+
+                // Bạn có thể dùng Tooltip để hiện số dư mà không cần bật Alert liên tục (gây phiền)
+                Tooltip tooltip = new Tooltip("Vượt quá tồn kho! Hiện còn: " + currentStock);
+                txtQuantity.setTooltip(tooltip);
+            } else {
+                // Trở về bình thường nếu hợp lệ
+                txtQuantity.setStyle("");
+                txtQuantity.setTooltip(null);
+            }
+        } catch (NumberFormatException e) {
+            // Nếu nhập chữ thì để calculateTotal xử lý hoặc báo lỗi định dạng
+        }
     }
 
     private void initTables() {
@@ -149,35 +193,51 @@ public class SalesOrderController {
 
     @FXML
     private void handleAdd() {
-        if (cbCustomer.getValue() == null || cbMaterial.getValue() == null) {
-            showAlert("Lỗi", "Vui lòng nhập đủ thông tin");
+        Material selected = cbMaterial.getValue();
+        if (selected == null) {
+            showAlert("Lỗi", "Vui lòng chọn vật liệu!");
             return;
         }
 
-        // Logic tạo đơn hàng (Vì FXML của bạn hiện tại thiết kế 1 đơn 1 dòng vật liệu)
-        // Nếu muốn 1 đơn nhiều vật liệu, bạn cần thêm 1 TableView chi tiết nữa vào FXML
-        // Ở đây tôi viết theo hướng đơn giản nhất để khớp với FXML của bạn:
+        if (cbCustomer.getValue() == null || cbMaterial.getValue() == null || txtQuantity.getText().isEmpty()) {
+            showAlert("Lỗi", "Vui lòng nhập đủ thông tin");
+            return;
+        }
+        try {
+            Material selectedMaterial = cbMaterial.getValue();
+            int qtyInput = Integer.parseInt(txtQuantity.getText());
+            int currentStock = materialDAO.getCurrentStock(selectedMaterial.getMaterialID());
 
-        SalesOrder order = new SalesOrder(
-                lblDetailID.getText(),
-                LocalDate.now(),
-                cbCustomer.getValue().getCustomerID(),
-                cbCustomer.getValue().getCustomerName(),
-                1,
+            if (qtyInput > currentStock) {
+                showAlert("Lỗi kho", "Số lượng bán (" + qtyInput + ") vượt quá tồn kho hiện tại (" + currentStock + ")!");
+                return;
+            }
+            SalesOrder order = new SalesOrder(
+                    lblDetailID.getText(),
+                    LocalDate.now(),
+                    cbCustomer.getValue().getCustomerID(),
+                    cbCustomer.getValue().getCustomerName(),
+                    1,
 //                cbPaymentMethod.getValue(),
-                txtNotes.getText(),
-                new BigDecimal(txtTotalAmount.getText())
-        );
+                    txtNotes.getText(),
+                    new BigDecimal(txtTotalAmount.getText())
+            );
 
-        // Tạo 1 list chi tiết ảo chỉ chứa 1 món hàng
-        SalesOrderDetail detail = new SalesOrderDetail(0, order.getOrderID(),
-                cbMaterial.getValue().getMaterialID(), cbMaterial.getValue().getMaterialName(),
-                Integer.parseInt(txtQuantity.getText()), new BigDecimal(txtPrice.getText()));
+            // Tạo 1 list chi tiết ảo chỉ chứa 1 món hàng
+            SalesOrderDetail detail = new SalesOrderDetail(0, order.getOrderID(),
+                    cbMaterial.getValue().getMaterialID(), cbMaterial.getValue().getMaterialName(),
+                    Integer.parseInt(txtQuantity.getText()), new BigDecimal(txtPrice.getText()));
 
-        if (orderDAO.insertFullOrder(order, java.util.List.of(detail))) {
-            showAlert("Thành công", "Đã tạo đơn hàng!");
-            listOrders.setAll(orderDAO.getAll());
-            handleClear();
+            if (orderDAO.insertFullOrder(order, java.util.List.of(detail))) {
+                showAlert("Thành công", "Đã tạo đơn hàng và cập nhật kho vật liệu!");
+                loadData();
+                handleClear();
+            } else {
+                showAlert("Lỗi", "Không thể hoàn thành đơn hàng!");
+            }
+        }
+        catch(NumberFormatException e){
+            showAlert("Lỗi", "Số lượng phải là số nguyên hợp lệ!");
         }
     }
 
@@ -247,6 +307,7 @@ public class SalesOrderController {
             if (orderDAO.update(selectedOrder)) {
                 showAlert("Thành công", "Cập nhật đơn hàng thành công!");
                 listOrders.setAll(orderDAO.getAll()); // Refresh bảng
+                loadData();
             } else {
                 showAlert("Lỗi", "Cập nhật thất bại!");
             }

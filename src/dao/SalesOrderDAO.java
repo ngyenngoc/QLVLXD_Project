@@ -10,13 +10,16 @@ public class SalesOrderDAO {
     private final SalesOrderDetailDAO detailDAO = new SalesOrderDetailDAO();
 
     public boolean insertFullOrder(SalesOrder order, List<SalesOrderDetail> details) {
-        String sql = "INSERT INTO SalesOrder (orderID, orderDate, customerID, userID, notes, totalAmount) VALUES (?, ?, ?, ?, ?, ?)";
+        String sqlOrder = "INSERT INTO SalesOrder (orderID, orderDate, customerID, userID, notes, totalAmount) VALUES (?, ?, ?, ?, ?, ?)";
+        // Câu lệnh cập nhật kho
+        String sqlUpdateStock = "UPDATE Material SET stockQuantity = stockQuantity - ? WHERE MaterialID = ?";
 
         Connection conn = DatabaseConnection.getConnection();
         try {
             conn.setAutoCommit(false);
 
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            // 1. Lưu Header đơn hàng
+            try (PreparedStatement ps = conn.prepareStatement(sqlOrder)) {
                 ps.setString(1, order.getOrderID());
                 ps.setDate(2, java.sql.Date.valueOf(order.getOrderDate()));
                 ps.setString(3, order.getCustomerID());
@@ -27,14 +30,25 @@ public class SalesOrderDAO {
             }
 
             detailDAO.insertDetails(conn, order.getOrderID(), details);
+
+            // 3. Cập nhật kho cho từng món hàng trong đơn
+            try (PreparedStatement psStock = conn.prepareStatement(sqlUpdateStock)) {
+                for (SalesOrderDetail item : details) {
+                    psStock.setInt(1, item.getQuantity());
+                    psStock.setString(2, item.getMaterialID());
+                    psStock.addBatch();
+                }
+                psStock.executeBatch();
+            }
+
             conn.commit();
             return true;
         } catch (SQLException e) {
-            try { if (conn != null) conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); } // Lỗi là hủy hết
+            try { if (conn != null) conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
             e.printStackTrace();
             return false;
         } finally {
-            try { conn.setAutoCommit(true); conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (conn != null) { conn.setAutoCommit(true); conn.close(); } } catch (SQLException e) { e.printStackTrace(); }
         }
     }
 

@@ -78,7 +78,21 @@ public class MaterialDAO {
         } catch (SQLException e) { return false; }
     }
 
-    // PHƯƠNG THỨC THIẾU Tự động sinh mã vật liệu
+    public int getCurrentStock(String materialID) {
+        String sql = "SELECT stockQuantity FROM Material WHERE MaterialID = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, materialID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("stockQuantity");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0; // Nếu không tìm thấy hoặc lỗi
+    }
     public String generateNewID() {
         String sql = "SELECT MAX(CAST(SUBSTRING(materialID, 3, LEN(materialID)) AS INT)) FROM Material";
         try (Connection conn = DatabaseConnection.getConnection();
