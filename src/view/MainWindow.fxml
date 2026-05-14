@@ -1,31 +1,211 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainWindowController">
-    <top>
-        <MenuBar BorderPane.alignment="CENTER">
-            <menus>
-                <Menu text="Hệ Thống">
-                    <items>
-                        <MenuItem onAction="#handleExit" text="Thoát" />
-                    </items>
-                </Menu>
-                <Menu text="Quản Lý">
-                    <items>
-                        <MenuItem fx:id="menuMaterial" onAction="#handleShowMaterial" text="Vật Liệu" />
-                        <MenuItem onAction = "#handleShowCategory" text="Loại vật liệu" />
-                        <MenuItem onAction = "#handleShowSupplier" text="Nhà cung cấp" />
-                        <MenuItem onAction = "#handleShowCustomer" text="Khách hàng" />
-                        <MenuItem onAction = "#handleShowSalesOrder" text="Đơn hàng bán" />
-                    </items>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-                </Menu>
-            </menus>
-        </MenuBar>
-    </top>
+<BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainWindowController">
+
+    <left>
+        <VBox prefHeight="720.0" prefWidth="260.0" style="-fx-background-color: #112d4e;" BorderPane.alignment="CENTER">
+            <children>
+                <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="260.0" spacing="12.0">
+                    <children>
+                        <ImageView fitHeight="42.0" fitWidth="258.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@image/qlvlxd.png" />
+                            </image>
+                        </ImageView>
+                        <Label lineSpacing="1.0" prefHeight="66.0" prefWidth="173.0" text="           QUẢN LÝ&#10;VẬT LIỆU XÂY DỰNG&#10;" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="15.0" />
+                            </font>
+                        </Label>
+                    </children>
+                    <padding>
+                        <Insets left="20.0" />
+                    </padding>
+                </HBox>
+
+                <VBox spacing="5.0" VBox.vgrow="ALWAYS">
+                    <children>
+                        <Button fx:id="btnDashboard" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="260.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" text="Trang chủ">
+                            <graphic>
+                                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@image/tongquan1.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                            <font><Font name="System Bold" size="15.0" /></font>
+                            <padding><Insets left="30.0" /></padding>
+                        </Button>
+
+                        <VBox spacing="0.0">
+                            <children>
+                                <Button fx:id="btnMaterialGroup" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#toggleMaterialMenu" prefHeight="55.0" prefWidth="260.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand; -fx-border-color: transparent transparent transparent #f97316; -fx-border-width: 0 0 0 5;" text="Vật liệu">
+                                    <graphic>
+                                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@image/vatlieu.png" />
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                    <font><Font name="System Bold" size="15.0" /></font>
+                                    <padding><Insets left="30.0" /></padding>
+                                </Button>
+
+                                <VBox fx:id="subMenuMaterial" managed="false" style="-fx-background-color: #0b1d33;" visible="false">
+                                    <children>
+                                        <Button fx:id="btnMaterial" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#handleShowMaterial" prefHeight="45.0" prefWidth="260.0" style="-fx-background-color: transparent; -fx-text-fill: #d1d1d1; -fx-cursor: hand;" text="• Quản lý vật liệu">
+                                            <font><Font size="14.0" /></font>
+                                            <padding><Insets left="55.0" /></padding>
+                                        </Button>
+
+                                        <Button fx:id="btnCategory" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#handleShowCategory" prefHeight="45.0" prefWidth="260.0" style="-fx-background-color: transparent; -fx-text-fill: #d1d1d1; -fx-cursor: hand;" text="• Loại vật liệu">
+                                            <font><Font size="14.0" /></font>
+                                            <padding><Insets left="55.0" /></padding>
+                                        </Button>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </VBox>
+
+                        <Button fx:id="btnCustomer" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#handleShowCustomer" prefHeight="55.0" prefWidth="260.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" text="Khách hàng">
+                            <graphic>
+                                <ImageView fitHeight="13.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@image/khachhang.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                            <font><Font name="System Bold" size="15.0" /></font>
+                            <padding><Insets left="30.0" /></padding>
+                        </Button>
+
+                        <Button fx:id="btnOrder" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#handleShowSalesOrder" prefHeight="55.0" prefWidth="260.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" text="Đơn hàng bán">
+                            <graphic>
+                                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@image/donhangban.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                            <font><Font name="System Bold" size="15.0" /></font>
+                            <padding><Insets left="30.0" /></padding>
+                        </Button>
+
+                        <Button fx:id="btnSupplier" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#handleShowSupplier" prefHeight="55.0" prefWidth="260.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" text="Nhà cung cấp">
+                            <graphic>
+                                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@image/nhacungcap.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                            <font><Font name="System Bold" size="15.0" /></font>
+                            <padding><Insets left="30.0" /></padding>
+                        </Button>
+
+                        <Button fx:id="btnReport" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#handleShowOrders" prefHeight="55.0" prefWidth="260.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" text="Báo cáo">
+                            <graphic>
+                                <ImageView fitHeight="15.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@image/baocao.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                            <font><Font name="System Bold" size="15.0" /></font>
+                            <padding><Insets left="30.0" /></padding>
+                        </Button>
+
+                        <Button fx:id="btnSettings" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="260.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" text="Cài đặt">
+                            <graphic>
+                                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@image/caidat.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                            <font><Font name="System Bold" size="15.0" /></font>
+                            <padding><Insets left="30.0" /></padding>
+                        </Button>
+                    </children>
+                    <VBox.margin>
+                        <Insets top="10.0" />
+                    </VBox.margin>
+                </VBox>
+
+                <Button fx:id="btnLogout" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#handleExit" prefHeight="55.0" prefWidth="260.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;" text="Đăng xuất">
+                    <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@image/dangsuat.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                    <font><Font name="System Bold" size="18.0" /></font>
+                    <padding><Insets left="30.0" /></padding>
+                </Button>
+            </children>
+        </VBox>
+    </left>
 
     <center>
-        <StackPane fx:id="centerContent" prefHeight="675.0" prefWidth="1000.0" BorderPane.alignment="CENTER" />
+        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #f4f7fa;" BorderPane.alignment="CENTER">
+            <children>
+                <HBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="1020.0" style="-fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                    <children>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@image/tongquan.png" />
+                            </image>
+                        </ImageView>
+                        <Label fx:id="lblTitle" prefHeight="27.0" prefWidth="285.0" text=" Hệ thống quản lý VLXD" textFill="#2c3e50">
+                            <font><Font name="System Bold" size="18.0" /></font>
+                        </Label>
+
+                        <Pane prefHeight="43.0" prefWidth="654.0" HBox.hgrow="ALWAYS" />
+
+                        <HBox alignment="CENTER" spacing="10.0">
+                            <children>
+                                <VBox alignment="CENTER_RIGHT" prefHeight="80.0">
+                                    <children>
+                                        <Label textFill="#2c3e50">
+                                            <font><Font name="System Bold" size="14.0" /></font>
+                                        </Label>
+                                        <Label text="Quản trị viên" textFill="#262956">
+                                            <font><Font size="18.0" /></font>
+                                        </Label>
+                                    </children>
+                                </VBox>
+                                <ImageView fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@image/quantrivien.png" />
+                                    </image>
+                                </ImageView>
+                            </children>
+                        </HBox>
+                    </children>
+                    <padding>
+                        <Insets left="30.0" right="30.0" />
+                    </padding>
+                </HBox>
+
+                <StackPane fx:id="centerContent" prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                    <padding>
+                        <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+                    </padding>
+                </StackPane>
+            </children>
+        </VBox>
     </center>
 </BorderPane>

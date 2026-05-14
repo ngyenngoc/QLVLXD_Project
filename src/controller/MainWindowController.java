@@ -206,6 +206,17 @@ public class MainWindowController {
         }
     }
 
+    @FXML
+    private javafx.scene.layout.VBox subMenuMaterial;
+
+    @FXML
+    public void toggleMaterialMenu(javafx.event.ActionEvent event) {
+        if (subMenuMaterial != null) {
+            boolean isVisible = subMenuMaterial.isVisible();
+            subMenuMaterial.setVisible(!isVisible);
+            subMenuMaterial.setManaged(!isVisible);
+        }
+    }
 
     @FXML
     private void handleExit(ActionEvent event) {
