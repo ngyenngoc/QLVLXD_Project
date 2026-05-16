@@ -219,6 +219,33 @@ public class MainWindowController {
     }
 
     @FXML
+    private void handleShowDashboard(ActionEvent event) {
+        try {
+            // Cách viết này an toàn hơn để tìm file trong Resource Folders
+            URL fxmlLocation = getClass().getResource("/view/DashboardView.fxml");
+
+            if (fxmlLocation == null) {
+                // Nếu vẫn không tìm thấy, thử tìm tương đối từ controller
+                fxmlLocation = getClass().getResource("../view/DashboardView.fxml");
+            }
+
+            if (fxmlLocation == null) {
+                throw new IOException("Không tìm thấy file DashboardlView.fxml tại thư mục view!");
+            }
+
+            FXMLLoader loader = new FXMLLoader(fxmlLocation);
+            Parent dashboardView = loader.load();
+
+            if (centerContent != null) {
+                centerContent.getChildren().setAll(dashboardView);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Lỗi nạp giao diện : " + e.getMessage());
+        }
+    }
+
+    @FXML
     private void handleExit(ActionEvent event) {
         System.exit(0);
     }

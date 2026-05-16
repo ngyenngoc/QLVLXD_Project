@@ -111,4 +111,82 @@ public class MaterialDAO {
         } catch (SQLException e) { e.printStackTrace(); }
         return "VL001";
     }
+    public int countAll() {
+        String sql = "SELECT COUNT(materialID) FROM Material";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
+     * 2. Cảnh báo tồn kho: Đếm số lượng vật liệu sắp hết hàng (tồn kho < 10)
+     */
+    public int countLowStock() {
+        String sql = "SELECT COUNT(materialID) FROM Material WHERE stockQuantity < 10";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
+     * 3. Lấy dữ liệu cho Biểu đồ tròn: Thống kê số lượng vật liệu theo từng Loại
+     */
+    public java.util.Map<String, Integer> getCategoryStats() {
+        java.util.Map<String, Integer> map = new java.util.LinkedHashMap<>();
+        String sql = "SELECT c.categoryName, COUNT(m.materialID) AS so_luong " +
+                "FROM Material m " +
+                "LEFT JOIN Category c ON m.categoryID = c.categoryID " +
+                "GROUP BY c.categoryName";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                String catName = rs.getString("categoryName");
+                if (catName == null) catName = "Chưa phân loại";
+                map.put(catName, rs.getInt("so_luong"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
+
+    /**
+     * 4. Lấy dữ liệu cho Biểu đồ cột: Top 5 Vật liệu bán chạy nhất
+     */
+    public java.util.Map<String, Integer> getTopSellingMaterials() {
+        java.util.Map<String, Integer> map = new java.util.LinkedHashMap<>();
+        String sql = "SELECT TOP 5 m.materialName, SUM(sod.quantity) AS tong_so_luong " +
+                "FROM SalesOrderDetail sod " +
+                "JOIN Material m ON sod.materialID = m.materialID " +
+                "GROUP BY m.materialName " +
+                "ORDER BY tong_so_luong DESC";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                map.put(rs.getString("materialName"), rs.getInt("tong_so_luong"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("Lỗi khi tải dữ liệu Top 5 vật liệu bán chạy!");
+        }
+        return map;
+    }
 }
