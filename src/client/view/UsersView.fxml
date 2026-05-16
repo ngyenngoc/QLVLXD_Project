@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -14,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: linear-gradient(to bottom, #dfe7f3, #c7d7ee);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.UsersController">
+<AnchorPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: linear-gradient(to bottom, #dfe7f3, #c7d7ee);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.UsersController">
 
     <children>
         <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -40,10 +41,13 @@
 
                                 <HBox alignment="CENTER_LEFT" prefHeight="45.0" style="-fx-border-color: #e0e0e0; -fx-border-radius: 30; -fx-background-radius: 30; -fx-background-color: white; -fx-border-width: 1.5;">
                                     <children>
-                                        <ImageView fitHeight="19.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                             <HBox.margin>
                                                 <Insets left="15.0" right="10.0" />
                                             </HBox.margin>
+                                            <image>
+                                                <Image url="@image/user.png" />
+                                            </image>
                                         </ImageView>
 
                                         <Separator orientation="VERTICAL" prefHeight="42.0" prefWidth="0.0" />
@@ -66,10 +70,13 @@
 
                                 <HBox alignment="CENTER_LEFT" prefHeight="45.0" style="-fx-border-color: #e0e0e0; -fx-border-radius: 30; -fx-background-radius: 30; -fx-background-color: white; -fx-border-width: 1.5;">
                                     <children>
-                                        <ImageView fitHeight="32.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                             <HBox.margin>
                                                 <Insets left="15.0" right="10.0" />
                                             </HBox.margin>
+                                            <image>
+                                                <Image url="@image/matkhau.png" />
+                                            </image>
                                         </ImageView>
 
                                         <Separator orientation="VERTICAL" prefHeight="42.0" prefWidth="0.0" />

@@ -1,6 +1,6 @@
-package controller;
+package client.controller;
 
-import dao.MaterialDAO;
+import server.dao.MaterialDAO;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
@@ -30,6 +30,15 @@ public class DashboardController {
 
     @FXML
     public void initialize() {
+        System.out.println("🔄 Đang gửi lệnh test GET_ALL_MATERIALS lên Server qua Socket...");
+        shared.Request requestTest = new shared.Request("GET_ALL_MATERIALS", null);
+        shared.Response responseTest = client.service.SocketClient.sendRequest(requestTest);
+
+        if (responseTest.isSuccess()) {
+            System.out.println("TUYỆT VỜI! SERVER TRẢ VỀ: " + responseTest.getMessage());
+        } else {
+            System.out.println(" KẾT NỐI THẤT BẠI: " + responseTest.getMessage());
+        }
         loadStatistics();
     }
 

@@ -1,8 +1,11 @@
-package model;
+package shared.model;
 
 import java.math.BigDecimal;
+import java.io.Serializable;
 
-public class SalesOrderDetail {
+public class SalesOrderDetail implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private int detailID;
     private String orderID;

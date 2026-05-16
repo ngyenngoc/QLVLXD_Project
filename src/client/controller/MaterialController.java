@@ -1,16 +1,16 @@
-package controller;
+package client.controller;
 
-import dao.CategoryDAO;
-import dao.MaterialDAO;
-import dao.SupplierDAO;
+import client.service.SocketClient;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import model.Category;
-import model.Material;
-import model.Supplier;
+import shared.Request;
+import shared.Response;
+import shared.model.Category;
+import shared.model.Material;
+import shared.model.Supplier;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -32,11 +32,8 @@ public class MaterialController {
     @FXML private Label lblMessage;
     @FXML private Button btnAdd, btnUpdate, btnDelete, btnRefresh;
 
-    private final MaterialDAO dao = new MaterialDAO();
-    private final CategoryDAO categoryDAO = new CategoryDAO(); // [THÊM MỚI] Để lấy danh sách loại
-    private final SupplierDAO supplierDAO = new SupplierDAO();
     private final ObservableList<Material> materialList = FXCollections.observableArrayList();
-    private final ObservableList<Category> categoryList = FXCollections.observableArrayList(); // [THÊM MỚI] List cho ComboBox
+    private final ObservableList<Category> categoryList = FXCollections.observableArrayList();
     private final ObservableList<Supplier> supplierList = FXCollections.observableArrayList();
 
     @FXML
@@ -48,9 +45,13 @@ public class MaterialController {
         cbUnit.setItems(units);
         cbUnit.setPromptText("Chọn đơn vị");
 
-        List<Category> listCats = categoryDAO.getAll();
-        categoryList.addAll(listCats);
-        cbCategory.setItems(categoryList);
+        // 2. Lấy danh mục Loại vật liệu qua Mạng
+        Response resCats = SocketClient.sendRequest(new Request("GET_ALL_CATEGORIES", null));
+        if (resCats.isSuccess()) {
+            List<Category> listCats = (List<Category>) resCats.getData();
+            categoryList.setAll(listCats);
+            cbCategory.setItems(categoryList);
+        }
         cbCategory.setPromptText("Chọn loại vật liệu");
 
         // 3. Ánh xạ cột bảng
@@ -67,35 +68,47 @@ public class MaterialController {
         tblMaterial.setItems(materialList);
         handleloadMaterialData();
 
-        // 4. Sự kiện click dòng
+        // 4. Sự kiện click dòng hiển thị chi tiết
         tblMaterial.getSelectionModel().selectedItemProperty().addListener(
                 (obs, oldSelection, newSelection) -> {
                     if (newSelection != null) displayDetails(newSelection);
                 });
-        supplierList.setAll(supplierDAO.getAll());
-        cbSupplier.setItems(supplierList);
+
+        // 5. Lấy danh sách Nhà cung cấp qua Mạng
+        Response resSpls = SocketClient.sendRequest(new Request("GET_ALL_SUPPLIERS", null));
+        if (resSpls.isSuccess()) {
+            List<Supplier> listSpls = (List<Supplier>) resSpls.getData();
+            supplierList.setAll(listSpls);
+            cbSupplier.setItems(supplierList);
+        }
     }
 
     @FXML
     private void loadMaterialData() {
-        List<Material> list = dao.getAll();
-        materialList.clear();
-        materialList.addAll(list);
+        // Lấy danh sách vật liệu từ Server
+        Response response = SocketClient.sendRequest(new Request("GET_ALL_MATERIALS", null));
+        if (response.isSuccess()) {
+            List<Material> list = (List<Material>) response.getData();
+            materialList.clear();
+            materialList.addAll(list);
+        } else {
+            lblMessage.setText("Lỗi mạng: " + response.getMessage());
+        }
     }
 
     @FXML
     private void handleAddMaterial() {
-        // Kiểm tra dữ liệu đầu vào
-        if (txtMaterialName.getText().isEmpty() || cbUnit.getValue() == null || cbCategory.getValue() == null) {
-            lblMessage.setText("Lỗi: Vui lòng nhập tên, đơn vị và chọn loại vật liệu!");
+        if (txtMaterialName.getText().isEmpty() || cbUnit.getValue() == null || cbCategory.getValue() == null || cbSupplier.getValue() == null) {
+            lblMessage.setText("Lỗi: Vui lòng nhập đầy đủ thông tin mẫu!");
             return;
         }
 
         try {
             int catID = cbCategory.getValue().getCategoryID();
             String SPLID = cbSupplier.getValue().getSupplierID();
+
             Material newMaterial = new Material(
-                    dao.generateNewID(),
+                    txtMaterialID.getText(), // ID đã được đồng bộ từ Server lúc clearForm
                     txtMaterialName.getText(),
                     cbUnit.getValue(),
                     new BigDecimal(txtPurchasePrice.getText()),
@@ -108,17 +121,19 @@ public class MaterialController {
                     ""
             );
 
-            if (dao.insert(newMaterial)) {
+            // Gửi lệnh thêm mới lên Server
+            Response response = SocketClient.sendRequest(new Request("ADD_MATERIAL", newMaterial));
+            if (response.isSuccess()) {
                 lblMessage.setText("Thêm thành công: " + newMaterial.getMaterialName());
                 loadMaterialData();
                 clearForm();
             } else {
-                lblMessage.setText("Lỗi: Không thể thêm vật liệu!");
+                lblMessage.setText("Lỗi: " + response.getMessage());
             }
         } catch (NumberFormatException e) {
-            lblMessage.setText("Lỗi: Giá tiền hoặc số lượng phải là số!");
+            lblMessage.setText("Lỗi: Giá tiền hoặc số lượng phải là số hợp lệ!");
         } catch (Exception e) {
-            lblMessage.setText("Lỗi: " + e.getMessage());
+            lblMessage.setText("Lỗi hệ thống: " + e.getMessage());
         }
     }
 
@@ -129,8 +144,8 @@ public class MaterialController {
             lblMessage.setText("Vui lòng chọn một vật liệu để sửa");
             return;
         }
-        if (cbCategory.getValue() == null) {
-            lblMessage.setText("Vui lòng chọn loại vật liệu!");
+        if (cbCategory.getValue() == null || cbSupplier.getValue() == null) {
+            lblMessage.setText("Vui lòng nhập chọn đầy đủ Loại và Nhà cung cấp!");
             return;
         }
 
@@ -138,28 +153,30 @@ public class MaterialController {
             int catID = cbCategory.getValue().getCategoryID();
             String SPLID = cbSupplier.getValue().getSupplierID();
             Material updatedMaterial = new Material(
-                    selectedMaterial.getMaterialID(), // Giữ ID cũ
+                    selectedMaterial.getMaterialID(),
                     txtMaterialName.getText(),
                     cbUnit.getValue(),
                     new BigDecimal(txtPurchasePrice.getText()),
                     new BigDecimal(txtSalePrice.getText()),
                     Integer.parseInt(txtStockQuantity.getText()),
                     txtDescription.getText(),
-                    catID, // ID loại mới
+                    catID,
                     "",
                     SPLID,
                     ""
             );
 
-            if (dao.update(updatedMaterial)) {
+            // Gửi lệnh cập nhật lên Server
+            Response response = SocketClient.sendRequest(new Request("UPDATE_MATERIAL", updatedMaterial));
+            if (response.isSuccess()) {
                 lblMessage.setText("Cập nhật thành công!");
                 loadMaterialData();
                 clearForm();
             } else {
-                lblMessage.setText("Lỗi: Cập nhật thất bại!");
+                lblMessage.setText("Lỗi: " + response.getMessage());
             }
         } catch (Exception e) {
-            lblMessage.setText("Lỗi: Dữ liệu không hợp lệ! " + e.getMessage());
+            lblMessage.setText("Lỗi dữ liệu: " + e.getMessage());
         }
     }
 
@@ -174,12 +191,14 @@ public class MaterialController {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Xóa vật liệu " + selectedMaterial.getMaterialName() + "?");
         Optional<ButtonType> result = confirm.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            if (dao.delete(selectedMaterial.getMaterialID())) {
-                lblMessage.setText("Đã xóa thành công");
-                materialList.remove(selectedMaterial);
+            // Gửi ID lên server yêu cầu xóa
+            Response response = SocketClient.sendRequest(new Request("DELETE_MATERIAL", selectedMaterial.getMaterialID()));
+            if (response.isSuccess()) {
+                lblMessage.setText("Đã xóa thành công vật liệu.");
+                loadMaterialData();
                 clearForm();
             } else {
-                lblMessage.setText("Lỗi: Không thể xóa vật liệu!");
+                lblMessage.setText("Lỗi: " + response.getMessage());
             }
         }
     }
@@ -194,14 +213,11 @@ public class MaterialController {
         txtMaterialID.setText(material.getMaterialID());
         txtMaterialName.setText(material.getMaterialName());
         cbUnit.setValue(material.getUnit());
-
         txtPurchasePrice.setText(material.getPurchasePrice().toString());
         txtSalePrice.setText(material.getSalePrice().toString());
-
         txtStockQuantity.setText(String.valueOf(material.getStockQuantity()));
         txtDescription.setText(material.getDescription());
 
-        // [LOGIC HIỂN THỊ] Chọn đúng loại trong ComboBox dựa vào ID
         for (Category c : cbCategory.getItems()) {
             if (c.getCategoryID() == material.getCategoryID()) {
                 cbCategory.setValue(c);
@@ -213,19 +229,27 @@ public class MaterialController {
                 cbSupplier.setValue(s);
                 break;
             }
-            lblMessage.setText("");
         }
+        lblMessage.setText("");
     }
 
     private void clearForm() {
-        txtMaterialID.setText(dao.generateNewID());
+        // Xin mã ID mới tự động sinh ra từ Server
+        Response response = SocketClient.sendRequest(new Request("GENERATE_MATERIAL_ID", null));
+        if (response.isSuccess()) {
+            txtMaterialID.setText((String) response.getData());
+        } else {
+            txtMaterialID.setText("ERROR");
+        }
+
         txtMaterialName.clear();
         cbUnit.setValue(null);
         txtPurchasePrice.clear();
         txtSalePrice.clear();
         txtStockQuantity.clear();
         txtDescription.clear();
-        cbCategory.setValue(null); // Xóa chọn ComboBox
+        cbCategory.setValue(null);
+        cbSupplier.setValue(null);
         tblMaterial.getSelectionModel().clearSelection();
     }
 }

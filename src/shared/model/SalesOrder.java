@@ -1,10 +1,14 @@
-package model;
+package shared.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.io.Serializable;
 
-public class SalesOrder {
+public class SalesOrder implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private String orderID;
     private LocalDate orderDate;
     private String customerID;

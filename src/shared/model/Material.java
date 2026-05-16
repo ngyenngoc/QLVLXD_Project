@@ -1,7 +1,11 @@
-package model;
+package shared.model;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-public class Material {
+import java.io.Serializable;
+
+public class Material implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private String materialID;
     private String materialName;
     private String unit;

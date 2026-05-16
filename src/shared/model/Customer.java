@@ -1,6 +1,10 @@
-package model;
+package shared.model;
+import java.io.Serializable;
 
-public class Customer {
+public class Customer implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private String customerID;
     private String customerName;
     private String address;

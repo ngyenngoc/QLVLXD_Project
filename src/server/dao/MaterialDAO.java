@@ -1,6 +1,6 @@
-package dao;
+package server.dao;
 
-import model.Material;
+import shared.model.Material;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

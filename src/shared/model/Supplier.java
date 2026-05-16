@@ -1,6 +1,11 @@
-package model;
+package shared.model;
+import java.io.Serializable;
 
-public class Supplier {
+public class Supplier implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+
     private String supplierID;
     private String supplierName;
     private String address;

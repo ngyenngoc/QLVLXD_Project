@@ -1,4 +1,4 @@
-// File: Main.java
+package client;// File: client.Main.java
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -12,9 +12,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        // Tải FXML từ package 'view'
-        // Lưu ý: Cấu trúc này giả định file nằm trong thư mục view/
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/UsersView.fxml"));
+        // Tải FXML từ package 'client.view'
+        // Lưu ý: Cấu trúc này giả định file nằm trong thư mục client.view/
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/client/view/MainWindow.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load(), 1000, 700); // Kích thước lớn hơn cho đồ án
 
