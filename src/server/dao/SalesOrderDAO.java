@@ -1,7 +1,7 @@
-package dao;
+package server.dao;
 
-import model.SalesOrder;
-import model.SalesOrderDetail;
+import shared.model.SalesOrder;
+import shared.model.SalesOrderDetail;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +74,7 @@ public class SalesOrderDAO {
                         rs.getString("notes"),
                         rs.getBigDecimal("totalAmount")
                 );
-                // Gán dữ liệu bổ sung vào model để hiển thị lên bảng
+                // Gán dữ liệu bổ sung vào shared.model để hiển thị lên bảng
                 order.setMaterialID(rs.getString("materialID"));
                 order.setMaterialName(rs.getString("materialName"));
                 order.setQuantity(rs.getInt("quantity"));
@@ -102,7 +102,7 @@ public class SalesOrderDAO {
         String sqlDetail = "DELETE FROM SalesOrderDetail WHERE OrderID = ?";
         String sqlOrder = "DELETE FROM SalesOrder WHERE OrderID = ?";
 
-        // Sử dụng DatabaseConnection của bạn
+        // Sử dụng DatabaseConnection
         try (Connection conn = DatabaseConnection.getConnection()) {
             conn.setAutoCommit(false); // Bắt đầu giao dịch (Transaction)
 
@@ -132,21 +132,45 @@ public class SalesOrderDAO {
     }
 
     public boolean update(SalesOrder order) {
-        String sql = "UPDATE SalesOrder SET CustomerID = ?, TotalAmount = ?, Notes = ? WHERE OrderID = ?";
+        // Câu lệnh 1: Cập nhật thông tin chung ở bảng cha
+        String sqlOrder = "UPDATE SalesOrder SET CustomerID = ?, TotalAmount = ?, Notes = ? WHERE OrderID = ?";
 
-        // Sử dụng DatabaseConnection của bạn
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        // Câu lệnh 2: Cập nhật số lượng mua và giá bán thực tế ở bảng con chi tiết
+        String sqlDetail = "UPDATE SalesOrderDetail SET quantity = ?, salePrice = ? WHERE orderID = ? AND materialID = ?";
 
-            ps.setString(1, order.getCustomerID());
-            ps.setBigDecimal(2, order.getTotalAmount());
-            ps.setString(3, order.getNotes());
-            ps.setString(4, order.getOrderID());
+        Connection conn = null;
+        try {
+            conn = DatabaseConnection.getConnection();
+            conn.setAutoCommit(false); // Bật Transaction để đảm bảo an toàn dữ liệu
 
-            return ps.executeUpdate() > 0;
+            // 1. Thực thi cập nhật bảng cha SalesOrder
+            try (PreparedStatement psOrder = conn.prepareStatement(sqlOrder)) {
+                psOrder.setString(1, order.getCustomerID());
+                psOrder.setBigDecimal(2, order.getTotalAmount());
+                psOrder.setString(3, order.getNotes());
+                psOrder.setString(4, order.getOrderID());
+                psOrder.executeUpdate();
+            }
+
+            // 2. Thực thi cập nhật số lượng mua ở bảng con SalesOrderDetail
+            try (PreparedStatement psDetail = conn.prepareStatement(sqlDetail)) {
+                psDetail.setInt(1, order.getQuantity());
+                psDetail.setBigDecimal(2, order.getSalePrice());
+                psDetail.setString(3, order.getOrderID());
+                psDetail.setString(4, order.getMaterialID()); // Định vị chính xác mã vật liệu đang sửa
+                psDetail.executeUpdate();
+            }
+
+            conn.commit(); // Đồng bộ tất cả thay đổi xuống SQL Server
+            return true;
         } catch (Exception e) {
+            if (conn != null) {
+                try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
+            }
             e.printStackTrace();
             return false;
+        } finally {
+            try { if (conn != null) { conn.setAutoCommit(true); conn.close(); } } catch (SQLException e) { e.printStackTrace(); }
         }
     }
 }

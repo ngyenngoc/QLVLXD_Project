@@ -1,6 +1,6 @@
-package dao;
+package server.dao;
 
-import model.SalesOrderDetail;
+import shared.model.SalesOrderDetail;
 import java.sql.*;
 import java.util.List;
 

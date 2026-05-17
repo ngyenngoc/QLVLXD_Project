@@ -1,13 +1,13 @@
 package server.network;
 
-import server.dao.CategoryDAO;
-import server.dao.MaterialDAO;
-import server.dao.SupplierDAO;
-import server.dao.CustomerDAO;
+import server.dao.*;
 import shared.Request;
 import shared.Response;
 import shared.model.Material;
 import shared.model.Customer;
+import shared.model.Category;
+import shared.model.Supplier;
+import shared.model.SalesOrder;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -19,6 +19,7 @@ public class ClientHandler implements Runnable {
     private CategoryDAO categoryDAO;
     private SupplierDAO supplierDAO;
     private CustomerDAO customerDAO;
+    private SalesOrderDAO salesOrderDAO;
 
     public ClientHandler(Socket socket) {
         this.clientSocket = socket;
@@ -26,6 +27,7 @@ public class ClientHandler implements Runnable {
         this.categoryDAO = new CategoryDAO();
         this.supplierDAO = new SupplierDAO();
         this.customerDAO = new CustomerDAO();
+        this.salesOrderDAO = new SalesOrderDAO();
     }
 
     @Override
@@ -116,6 +118,106 @@ public class ClientHandler implements Runnable {
                         response = new Response(false, "Không thể xóa khách hàng này!", null);
                     }
                     break;
+                // ================= KHỐI XỬ LÝ LOẠI NHÀ CUNG CẤP (SUPPLIER) =================
+                case "ADD_SUPPLIER":
+                    Supplier newSup = (Supplier) request.getData();
+                    if (supplierDAO.insert(newSup)) {
+                        response = new Response(true, "Thêm loại nhà cung cấpthành công!", null);
+                    } else {
+                        response = new Response(false, "Không thể thêm nhà cung cấp vào cơ sở dữ liệu!", null);
+                    }
+                    break;
+
+                case "UPDATE_SUPPLIER":
+                    Supplier upSup = (Supplier) request.getData();
+                    if (supplierDAO.update(upSup)) {
+                        response = new Response(true, "Cập nhật nhà cung cấp thành công!", null);
+                    } else {
+                        response = new Response(false, "Cập nhật nhà cung cấp thất bại!", null);
+                    }
+                    break;
+
+                case "DELETE_SUPPLIER":
+                    String supplierID = (String) request.getData();
+                    if (supplierDAO.delete(supplierID)) {
+                        response = new Response(true, "Xóa nhà cung cấp thành công!", null);
+                    } else {
+                        response = new Response(false, "Không thể xóa nhà cung cấp này (Có thể đang được dùng ở bảng Vật liệu)!", null);
+                    }
+                    break;
+                // ================= KHỐI XỬ LÝ LOẠI VẬT LIỆU (CATEGORY) =================
+                case "ADD_CATEGORY":
+                    Category newCat = (Category) request.getData();
+                    if (categoryDAO.insert(newCat)) {
+                        response = new Response(true, "Thêm loại vật liệu thành công!", null);
+                    } else {
+                        response = new Response(false, "Không thể thêm loại vật liệu vào cơ sở dữ liệu!", null);
+                    }
+                    break;
+
+                case "UPDATE_CATEGORY":
+                    Category upCat = (Category) request.getData();
+                    if (categoryDAO.update(upCat)) {
+                        response = new Response(true, "Cập nhật loại vật liệu thành công!", null);
+                    } else {
+                        response = new Response(false, "Cập nhật loại vật liệu thất bại!", null);
+                    }
+                    break;
+
+                case "DELETE_CATEGORY":
+                    int categoryID = (int) request.getData();
+                    if (categoryDAO.delete(categoryID)) {
+                        response = new Response(true, "Xóa loại vật liệu thành công!", null);
+                    } else {
+                        response = new Response(false, "Không thể xóa loại vật liệu này (Có thể đang được dùng ở bảng Vật liệu)!", null);
+                    }
+                    break;
+                // ================= KHỐI XỬ LÝ ĐƠN HÀNG (SALESORDER) =================
+                case "GET_ALL_ORDERS":
+                    response = new Response(true, "Lấy danh sách đơn hàng thành công", salesOrderDAO.getAll());
+                    break;
+
+                case "GENERATE_ORDERID":
+                    response = new Response(true, "Sinh ID đơn hàng thành công", salesOrderDAO.generateNewID());
+                    break;
+
+                case "GET_CURRENT_STOCK":
+                    String materialID = (String) request.getData();
+                    int stock = materialDAO.getCurrentStock(materialID); // Dùng materialDAO có sẵn của Server
+                    response = new Response(true, "Lấy tồn kho thành công", stock);
+                    break;
+
+                case "ADD_FULL_ORDER":
+                    // Client gửi lên một mảng chứa [SalesOrder, List<SalesOrderDetail>]
+                    java.util.List<Object> orderPayload = (java.util.List<Object>) request.getData();
+                    shared.model.SalesOrder order = (shared.model.SalesOrder) orderPayload.get(0);
+                    java.util.List<shared.model.SalesOrderDetail> details = (java.util.List<shared.model.SalesOrderDetail>) orderPayload.get(1);
+
+                    if (salesOrderDAO.insertFullOrder(order, details)) {
+                        response = new Response(true, "Tạo đơn hàng và trừ kho thành công!", null);
+                    } else {
+                        response = new Response(false, "Lỗi: Không thể hoàn thành đơn hàng hệ thống!", null);
+                    }
+                    break;
+
+                case "UPDATE_ORDER":
+                    shared.model.SalesOrder upOrder = (shared.model.SalesOrder) request.getData();
+                    if (salesOrderDAO.update(upOrder)) {
+                        response = new Response(true, "Cập nhật đơn hàng thành công!", null);
+                    } else {
+                        response = new Response(false, "Cập nhật đơn hàng thất bại!", null);
+                    }
+                    break;
+
+                case "DELETE_ORDER":
+                    String orderID = (String) request.getData();
+                    if (salesOrderDAO.delete(orderID)) {
+                        response = new Response(true, "Xóa đơn hàng thành công!", null);
+                    } else {
+                        response = new Response(false, "Không thể xóa đơn hàng do ràng buộc dữ liệu!", null);
+                    }
+                    break;
+
 
                 default:
                     response = new Response(false, "Server không hiểu lệnh: " + request.getAction(), null);
