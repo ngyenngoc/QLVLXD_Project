@@ -9,6 +9,7 @@ import shared.model.Category;
 import shared.model.Supplier;
 import shared.model.SalesOrder;
 
+
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -20,6 +21,7 @@ public class ClientHandler implements Runnable {
     private SupplierDAO supplierDAO;
     private CustomerDAO customerDAO;
     private SalesOrderDAO salesOrderDAO;
+    private UsersDAO usersDAO;
 
     public ClientHandler(Socket socket) {
         this.clientSocket = socket;
@@ -28,6 +30,7 @@ public class ClientHandler implements Runnable {
         this.supplierDAO = new SupplierDAO();
         this.customerDAO = new CustomerDAO();
         this.salesOrderDAO = new SalesOrderDAO();
+        this.usersDAO = new UsersDAO();
     }
 
     @Override
@@ -37,7 +40,7 @@ public class ClientHandler implements Runnable {
                 ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream())
         ) {
             Request request = (Request) in.readObject();
-            System.out.println("📬 Server nhận yêu cầu: [" + request.getAction() + "]");
+            System.out.println(" Server nhận yêu cầu: [" + request.getAction() + "]");
             Response response = null;
 
             switch (request.getAction()) {
@@ -215,6 +218,17 @@ public class ClientHandler implements Runnable {
                         response = new Response(true, "Xóa đơn hàng thành công!", null);
                     } else {
                         response = new Response(false, "Không thể xóa đơn hàng do ràng buộc dữ liệu!", null);
+                    }
+                    break;
+                // ================= KHỐI XỬ LÝ ĐĂNG NHẬP (USER LOGIN) =================
+                case "LOGIN":
+                    shared.model.Users loginInfo = (shared.model.Users) request.getData();
+                    shared.model.Users validatedUser = usersDAO.login(loginInfo.getUserName(), loginInfo.getPassWord());
+
+                    if (validatedUser != null) {
+                        response = new Response(true, "Đăng nhập thành công!", validatedUser);
+                    } else {
+                        response = new Response(false, "Sai tên đăng nhập hoặc mật khẩu!", null);
                     }
                     break;
 
