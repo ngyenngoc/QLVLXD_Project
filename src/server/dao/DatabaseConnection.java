@@ -1,4 +1,4 @@
-package dao;
+package server.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,10 +10,7 @@ public class DatabaseConnection {
         String password = "040227"; // <== HÃY ĐIỀN MẬT KHẨU CỦA BẠN VÀO ĐÂY
 
         // 2. CHUỖI KẾT NỐI (Đúng tên DB QLVLXD_OOP bạn đã tạo)
-        String url = "jdbc:sqlserver://localhost:1433;" +
-                "databaseName=QLVLXD_OOP;" +
-                "encrypt=true;" +
-                "trustServerCertificate=true;";
+        String url = "jdbc:sqlserver://localhost:1433;databaseName=QLVLXD_OOP;encrypt=true;trustServerCertificate=true;";
 
         try {
             // Nạp Driver

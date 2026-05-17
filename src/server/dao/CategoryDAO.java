@@ -1,6 +1,6 @@
-package dao;
+package server.dao;
 
-import model.Category;
+import shared.model.Category;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
