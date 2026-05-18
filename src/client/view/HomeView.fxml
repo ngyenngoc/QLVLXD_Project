@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" prefHeight="600" prefWidth="900" spacing="20" style="-fx-background-color: linear-gradient(to bottom, #f5f7fa, #e4ecf5);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+
+    <!-- Padding -->
+    <padding>
+        <Insets bottom="30" left="30" right="30" top="30" />
+    </padding>
+
+    <!-- Logo -->
+    <ImageView fitHeight="234.0" fitWidth="299.0" preserveRatio="true">
+
+        <image>
+            <Image url="@image/home.png" />
+        </image>
+
+    </ImageView>
+
+    <!-- Tiêu đề hệ thống -->
+    <Label style="                -fx-font-size: 28px;                -fx-font-weight: bold;                -fx-text-fill: #1E3A5F;            " text="🏗 HỆ THỐNG QUẢN LÝ VẬT LIỆU XÂY DỰNG" />
+
+    <!-- Xin chào -->
+    <Label fx:id="lblWelcome" style="                -fx-font-size: 22px;                -fx-font-weight: bold;                -fx-text-fill: #2E7D32;            " text="Xin chào " />
+
+    <!-- Subtitle -->
+    <Label style="-fx-font-size: 22px; -fx-text-fill: #555555;" text="Chào mừng bạn quay trở lại hệ thống!">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
+
+    <!-- Mô tả -->
+    <Label alignment="CENTER" style="                -fx-font-size: 15px;                -fx-text-fill: #666666;            " text="Quản lý khách hàng • Vật liệu • Nhà cung cấp • Đơn hàng • Chat hỗ trợ" wrapText="true">
+      <font>
+         <Font name="System Bold Italic" size="12.0" />
+      </font></Label>
+
+</VBox>
