@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="550" prefWidth="420" spacing="10" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.CustomerChatController">
+
+    <!-- Padding -->
+    <padding>
+        <Insets bottom="10" left="10" right="10" top="10" />
+    </padding>
+
+    <!-- Tiêu đề -->
+    <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1F4E79;" text="📱 ỨNG DỤNG KHÁCH HÀNG" textFill="#4b0606" />
+
+    <!-- Khu nhập tên khách -->
+    <HBox alignment="CENTER_LEFT" spacing="10">
+
+        <Label style="-fx-font-weight:bold;" text="Tên của bạn:" />
+
+        <TextField fx:id="txtMyName" promptText="VD: Nguyễn Văn A">
+
+            <HBox.hgrow>
+                <Priority fx:constant="ALWAYS" />
+            </HBox.hgrow>
+
+        </TextField>
+
+        <Button fx:id="btnConnect" onAction="#handleConnect" style="-fx-background-color:#28a745;                        -fx-text-fill:white;                        -fx-font-weight:bold;" text="Vào Chat" />
+
+    </HBox>
+
+    <!-- Khung chat -->
+    <TextArea fx:id="txtChatHistory" editable="false" style="-fx-font-size:14px;                      -fx-control-inner-background:#e3f2fd;                      -fx-border-color:#bdbdbd;" wrapText="true" VBox.vgrow="ALWAYS" />
+
+    <!-- Khu nhập tin nhắn -->
+    <HBox alignment="CENTER_LEFT" spacing="10">
+
+        <Label style="-fx-font-weight:bold;" text="Gửi đến:" />
+
+        <TextField fx:id="txtReceiver" prefHeight="25.0" prefWidth="54.0" promptText="Mã NV" text="NV1" />
+
+        <TextField fx:id="txtMessage" disable="true" onAction="#handleSend" promptText="Nhập tin nhắn hỗ trợ...">
+
+            <HBox.hgrow>
+                <Priority fx:constant="ALWAYS" />
+            </HBox.hgrow>
+
+        </TextField>
+
+        <Button fx:id="btnSend" disable="true" onAction="#handleSend" style="-fx-background-color:#0078D7;                        -fx-text-fill:white;                        -fx-font-weight:bold;" text="Gửi" />
+
+    </HBox>
+
+</VBox>
