@@ -206,6 +206,36 @@ public class MainWindowController {
             System.err.println("Lỗi nạp giao diện : " + e.getMessage());
         }
     }
+    @FXML
+    private void handleOpenChat() {
+        try {
+            // Tải file giao diện Chat từ thư mục view
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/client/view/ChatView.fxml"));
+            javafx.scene.Parent root = loader.load();
+
+            // Tạo một cửa sổ (Stage) mới
+            javafx.stage.Stage chatStage = new javafx.stage.Stage();
+            chatStage.setTitle("💬 Kênh trao đổi nội bộ");
+
+            // Thiết lập kích thước vừa vặn cho khung chat
+            chatStage.setScene(new javafx.scene.Scene(root, 400, 500));
+
+            // Không cho phép phóng to toàn màn hình để giữ form đẹp
+            chatStage.setResizable(false);
+
+            // Hiển thị cửa sổ song song với màn hình chính
+            chatStage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Nếu bạn có sẵn hàm showAlert trong Controller này thì dùng, không thì dùng Alert mặc định
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+            alert.setTitle("Lỗi");
+            alert.setHeaderText(null);
+            alert.setContentText("Không thể mở cửa sổ Chat nội bộ! Vui lòng kiểm tra lại đường dẫn file FXML.");
+            alert.showAndWait();
+        }
+    }
 
     @FXML
     private void handleExit(ActionEvent event) {
