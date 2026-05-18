@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="550" prefWidth="450" spacing="10" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.ChatController">
+<VBox prefHeight="550" prefWidth="420.0" spacing="10" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.ChatController">
 
     <padding>
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
 
     <!-- Tiêu đề -->
-    <Label style="-fx-font-size:18px;                   -fx-font-weight:bold;                   -fx-text-fill:#0078D7;" text="💬 CHAT KHÁCH HÀNG" textFill="#0f0f59" />
+    <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1F4E79;" text="💬 CHAT KHÁCH HÀNG" textFill="#0f0f59" />
 
     <!-- Người nhận -->
     <HBox alignment="CENTER_LEFT" spacing="10">
@@ -29,7 +35,7 @@
     </HBox>
 
     <!-- Khung chat -->
-    <TextArea fx:id="txtChatHistory" editable="false" style="-fx-font-size:14px;                      -fx-control-inner-background:#f4f4f4;                      -fx-border-color:#dcdcdc;" wrapText="true" VBox.vgrow="ALWAYS" />
+    <TextArea fx:id="txtChatHistory" editable="false" style="-fx-font-size: 14px; -fx-control-inner-background: #e3f2fd; -fx-border-color: #dcdcdc;" wrapText="true" VBox.vgrow="ALWAYS" />
 
     <!-- Nhập tin -->
     <HBox spacing="10">

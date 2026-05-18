@@ -9,9 +9,7 @@ import javafx.scene.control.ComboBox;
 import shared.Request;
 import shared.Response;
 import shared.model.ChatMessage;
-
 import shared.model.Customer;
-
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -22,7 +20,6 @@ public class ChatController {
 
     @FXML private TextArea txtChatHistory;
     @FXML private TextField txtMessage;
-
     @FXML private ComboBox<String> cbReceiver;
 
     private Socket chatSocket;
@@ -34,25 +31,22 @@ public class ChatController {
     @FXML
     public void initialize() {
         connectToChatServer();
-        loadCustomerList(); // 2. BỔ SUNG: Gọi hàm nạp dữ liệu vào ComboBox khi vừa mở cửa sổ
+        loadCustomerList();
     }
 
-    // danh sách khách hàng từ Database qua Socket cổng 9000
+    // Danh sách khách hàng từ Database qua Socket cổng 9000
     private void loadCustomerList() {
         try {
-            // Yêu cầu Server chính lấy dữ liệu
             Request req = new Request("GET_ALL_CUSTOMERS", null);
             Response res = SocketClient.sendRequest(req);
 
             if (res != null && res.isSuccess()) {
                 List<Customer> customers = (List<Customer>) res.getData();
 
-                // Xóa dữ liệu cũ và đổ dữ liệu mới vào ComboBox
                 cbReceiver.getItems().clear();
                 for (Customer c : customers) {
-                    // Lấy Tên Khách Hàng (hoặc Số điện thoại/Email tùy bạn) nhét vào ComboBox
-                    // Lưu ý: Sửa 'getCustomerName()' thành hàm GET tương ứng trong file Customer.java của bạn nếu nó tên khác
-                    cbReceiver.getItems().add(c.getCustomerName());
+                    // ĐÃ THÊM .trim() ĐỂ CẮT BỎ DẤU CÁCH THỪA TỪ SQL
+                    cbReceiver.getItems().add(c.getCustomerName().trim());
                 }
             }
         } catch (Exception e) {
@@ -75,8 +69,12 @@ public class ChatController {
                     while (true) {
                         ChatMessage msg = (ChatMessage) in.readObject();
                         Platform.runLater(() -> {
-                            // Hiển thị dạng định nghĩa rõ ràng: [Người gửi -> Người nhận]: Nội dung
-                            txtChatHistory.appendText("[" + msg.getSenderName() + "]: " + msg.getContent() + "\n");
+                            // --- PHÂN LOẠI NGƯỜI GỬI ---
+                            if (msg.getSenderName().equals(myName)) {
+                                txtChatHistory.appendText("👤 [Tôi]: " + msg.getContent() + "\n");
+                            } else {
+                                txtChatHistory.appendText("💬 [" + msg.getSenderName() + "]: " + msg.getContent() + "\n");
+                            }
                         });
                     }
                 } catch (Exception e) {
@@ -93,15 +91,18 @@ public class ChatController {
 
     @FXML
     private void handleSend() {
-        // 4. ĐÃ THAY ĐỔI: Lấy giá trị từ ComboBox thay vì TextField
-        String receiver = cbReceiver.getValue();
+        // Lấy giá trị chưa cắt
+        String rawReceiver = cbReceiver.getValue();
         String content = txtMessage.getText().trim();
 
-        // Kiểm tra xem đã chọn khách hàng trong danh sách chưa
-        if (receiver == null || receiver.isEmpty() || content.isEmpty()) return;
+        // Kiểm tra xem đã chọn ai chưa
+        if (rawReceiver == null || rawReceiver.trim().isEmpty() || content.isEmpty()) return;
+
+        // ĐÃ THÊM .trim() CHO TÊN NGƯỜI NHẬN TRƯỚC KHI ĐÓNG GÓI
+        String receiver = rawReceiver.trim();
 
         try {
-            // Đóng gói tin nhắn 1-1 chuẩn xác: Người gửi, Người nhận thật, Nội dung
+            // Lúc này receiver đã sạch sẽ hoàn toàn (VD: "Nguyễn Yến")
             ChatMessage newMsg = new ChatMessage(myName, receiver, content);
 
             out.writeObject(newMsg);
