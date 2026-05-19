@@ -1,0 +1,18 @@
+.menu-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+}
+
+.menu-button:hover {
+    -fx-background-color: #1b3a5a;
+}
+
+.menu-button-active {
+    -fx-background-color: #24416b !important;
+    -fx-text-fill: #38bdf8 !important;
+    -fx-border-color: transparent transparent transparent #38bdf8 !important;
+    -fx-border-width: 0 0 0 4 !important;
+}
