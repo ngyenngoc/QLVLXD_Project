@@ -86,7 +86,7 @@ public class SupplierDAO {
 
     // 5. Tự động sinh mã mới (Ví dụ: NCC001, NCC002...)
     public String generateNewID() {
-        String sql = "SELECT MAX(CAST(SUBSTRING(supplierID, 4, LEN(supplierID)) AS INT)) FROM Supplier";
+        String sql = "SELECT MAX(CAST(SUBSTRING(supplierID, 4, LEN(supplierID)) AS INT)) FROM Supplier WHERE supplierID LIKE 'NCC%'";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {

@@ -11,8 +11,6 @@ public class SalesOrderDAO {
 
     public boolean insertFullOrder(SalesOrder order, List<SalesOrderDetail> details) {
         String sqlOrder = "INSERT INTO SalesOrder (orderID, orderDate, customerID, userID, notes, totalAmount) VALUES (?, ?, ?, ?, ?, ?)";
-        // Câu lệnh cập nhật kho
-        String sqlUpdateStock = "UPDATE Material SET stockQuantity = stockQuantity - ? WHERE MaterialID = ?";
 
         Connection conn = DatabaseConnection.getConnection();
         try {
@@ -30,16 +28,6 @@ public class SalesOrderDAO {
             }
 
             detailDAO.insertDetails(conn, order.getOrderID(), details);
-
-            // 3. Cập nhật kho cho từng món hàng trong đơn
-            try (PreparedStatement psStock = conn.prepareStatement(sqlUpdateStock)) {
-                for (SalesOrderDetail item : details) {
-                    psStock.setInt(1, item.getQuantity());
-                    psStock.setString(2, item.getMaterialID());
-                    psStock.addBatch();
-                }
-                psStock.executeBatch();
-            }
 
             conn.commit();
             return true;
@@ -87,12 +75,14 @@ public class SalesOrderDAO {
     }
 
     public String generateNewID() {
-        String sql = "SELECT MAX(CAST(SUBSTRING(orderID, 4, LEN(orderID)) AS INT)) FROM SalesOrder";
+        String sql = "SELECT MAX(CAST(SUBSTRING(orderID, 4, LEN(orderID)) AS INT)) FROM SalesOrder WHERE orderID LIKE 'ĐHB%'";
+
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
-                return String.format("ĐHB%03d", rs.getInt(1) + 1);
+                int maxId = rs.getInt(1);
+                return String.format("ĐHB%03d", maxId + 1);
             }
         } catch (SQLException e) { e.printStackTrace(); }
         return "ĐHB001";
