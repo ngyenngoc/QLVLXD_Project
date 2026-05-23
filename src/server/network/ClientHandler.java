@@ -8,11 +8,14 @@ import shared.model.Customer;
 import shared.model.Category;
 import shared.model.Supplier;
 import shared.model.SalesOrder;
+import java.util.HashMap;
+import java.util.Map;
 
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+
 
 public class ClientHandler implements Runnable {
     private Socket clientSocket;
@@ -129,6 +132,8 @@ public class ClientHandler implements Runnable {
                     } else {
                         response = new Response(false, "Không thể thêm nhà cung cấp vào cơ sở dữ liệu!", null);
                     }
+                case "GENERATE_SUPPLIER_ID":
+                    response = new Response(true, "Sinh ID nhà cung cấp thành công", supplierDAO.generateNewID());
                     break;
 
                 case "UPDATE_SUPPLIER":
@@ -180,7 +185,7 @@ public class ClientHandler implements Runnable {
                     response = new Response(true, "Lấy danh sách đơn hàng thành công", salesOrderDAO.getAll());
                     break;
 
-                case "GENERATE_ORDERID":
+                case "GENERATE_ORDER_ID":
                     response = new Response(true, "Sinh ID đơn hàng thành công", salesOrderDAO.generateNewID());
                     break;
 
@@ -229,6 +234,22 @@ public class ClientHandler implements Runnable {
                         response = new Response(true, "Đăng nhập thành công!", validatedUser);
                     } else {
                         response = new Response(false, "Sai tên đăng nhập hoặc mật khẩu!", null);
+                    }
+                    break;
+                // ================= KHỐI XỬ LÝ THỐNG KÊ (DASHBOARD) =================
+                case "GET_DASHBOARD_STATS":
+                    try {
+                        Map<String, Object> statsMap = new HashMap<>();
+
+                        statsMap.put("totalMaterial", materialDAO.countAll());
+                        statsMap.put("lowStock", materialDAO.countLowStock());
+                        statsMap.put("categoryStats", materialDAO.getCategoryStats());
+                        statsMap.put("topSelling", materialDAO.getTopSellingMaterials());
+
+                        response = new Response(true, "Lấy dữ liệu thống kê thành công!", statsMap);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        response = new Response(false, "Lỗi khi thống kê dữ liệu: " + ex.getMessage(), null);
                     }
                     break;
 
