@@ -3,12 +3,10 @@ package server.network;
 import server.dao.*;
 import shared.Request;
 import shared.Response;
-import shared.model.Material;
-import shared.model.Customer;
-import shared.model.Category;
-import shared.model.Supplier;
-import shared.model.SalesOrder;
+import shared.model.*;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -132,6 +130,7 @@ public class ClientHandler implements Runnable {
                     } else {
                         response = new Response(false, "Không thể thêm nhà cung cấp vào cơ sở dữ liệu!", null);
                     }
+                    break;
                 case "GENERATE_SUPPLIER_ID":
                     response = new Response(true, "Sinh ID nhà cung cấp thành công", supplierDAO.generateNewID());
                     break;
@@ -252,7 +251,16 @@ public class ClientHandler implements Runnable {
                         response = new Response(false, "Lỗi khi thống kê dữ liệu: " + ex.getMessage(), null);
                     }
                     break;
+                // ================= KHỐI XỬ LÝ LỊCH SỬ CHAT (CHATMESSAGE) =================
+                case "GET_CHAT_HISTORY":
+                    //  Nhận mảng chứa tên 2 người (VD: NV1 và Khách hàng)
+                    String[] participants = (String[]) request.getData();
 
+                    ChatDAO chatDAO = new ChatDAO();
+                    List<ChatMessage> history = chatDAO.getChatHistory(participants[0], participants[1]);
+
+                    response = new Response(true, "Lấy lịch sử thành công", history);
+                    break;
 
                 default:
                     response = new Response(false, "Server không hiểu lệnh: " + request.getAction(), null);

@@ -32,6 +32,13 @@ public class ChatController {
     public void initialize() {
         connectToChatServer();
         loadCustomerList();
+
+        cbReceiver.setOnAction(event -> {
+            String selectedCustomer = cbReceiver.getValue();
+            if (selectedCustomer != null && !selectedCustomer.trim().isEmpty()) {
+                loadHistoryWith(selectedCustomer.trim());
+            }
+        });
     }
 
     // Danh sách khách hàng từ Database qua Socket cổng 9000
@@ -111,6 +118,36 @@ public class ChatController {
             txtMessage.clear();
         } catch (Exception e) {
             txtChatHistory.appendText(" Lỗi gửi tin.\n");
+        }
+    }
+    private void loadHistoryWith(String customerName) {
+        // Xóa sạch khung chat cũ trên màn hình
+        txtChatHistory.clear();
+        txtChatHistory.appendText("");
+
+        try {
+            // Gửi Request qua cổng 9000 (API) để đòi lịch sử
+            // Truyền mảng String chứa tên 2 người cần lấy lịch sử
+            String[] participants = {myName, customerName};
+            Request req = new Request("GET_CHAT_HISTORY", participants);
+            Response res = SocketClient.sendRequest(req);
+
+            if (res != null && res.isSuccess()) {
+                List<ChatMessage> history = (List<ChatMessage>) res.getData();
+
+                // In từng dòng lịch sử ra màn hình
+                for (ChatMessage msg : history) {
+                    if (msg.getSenderName().equals(myName)) {
+                        txtChatHistory.appendText("👤 [Tôi]: " + msg.getContent() + "\n");
+                    } else {
+                        txtChatHistory.appendText("💬 [" + msg.getSenderName() + "]: " + msg.getContent() + "\n");
+                    }
+                }
+            } else {
+                txtChatHistory.appendText("(Chưa có tin nhắn nào)\n");
+            }
+        } catch (Exception e) {
+            txtChatHistory.appendText(" Lỗi khi tải lịch sử chat.\n");
         }
     }
 }

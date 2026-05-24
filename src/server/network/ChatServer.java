@@ -1,7 +1,7 @@
 package server.network;
 
 import shared.model.ChatMessage;
-import server.dao.MessageDAO;
+import server.dao.ChatDAO;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -13,9 +13,9 @@ import java.util.Map;
 public class ChatServer {
     private static final int CHAT_PORT = 9001;
 
-    // Thay đổi quan trọng: Lưu danh bạ trực tuyến (Tên tài khoản -> Đường ống gửi tin)
+    // Lưu danh bạ trực tuyến (Tên tài khoản -> Đường ống gửi tin)
     private static final Map<String, ObjectOutputStream> onlineUsers = new HashMap<>();
-    private final MessageDAO messageDAO = new MessageDAO();
+
 
     public void startChatServer() {
         try (ServerSocket serverSocket = new ServerSocket(CHAT_PORT)) {
@@ -33,7 +33,7 @@ public class ChatServer {
         private Socket socket;
         private ObjectInputStream in;
         private ObjectOutputStream out;
-        private String currentUsername; // Lưu tên người đang kết nối ở luồng này
+        private String currentUsername;
 
         public ChatHandler(Socket socket) {
             this.socket = socket;
@@ -45,7 +45,7 @@ public class ChatServer {
                 out = new ObjectOutputStream(socket.getOutputStream());
                 in = new ObjectInputStream(socket.getInputStream());
 
-                // Lệnh đầu tiên Client gửi lên bắt buộc phải là Tên của người đăng nhập
+
                 currentUsername = (String) in.readObject();
 
                 synchronized (onlineUsers) {
@@ -57,21 +57,21 @@ public class ChatServer {
                 while (true) {
                     ChatMessage incomingMsg = (ChatMessage) in.readObject();
 
-                    // 1. Lưu tin nhắn vào SQL Server làm bằng chứng
-                    messageDAO.insert(incomingMsg);
+                    new ChatDAO().saveMessage(incomingMsg);
+
 
                     String receiver = incomingMsg.getReceiverName();
                     String sender = incomingMsg.getSenderName();
 
-                    // 2. SHIPPER gửi tin nhắn tới Người Nhận (nếu họ đang online)
                     synchronized (onlineUsers) {
+                        // Gửi cho người nhận
                         ObjectOutputStream receiverOut = onlineUsers.get(receiver);
                         if (receiverOut != null) {
                             receiverOut.writeObject(incomingMsg);
                             receiverOut.reset();
                         }
 
-                        // 3. SHIPPER gửi lại phản hồi cho chính Người Gửi để màn hình của họ hiện lên
+                        // Phản hồi lại cho người gửi để cập nhật giao diện
                         ObjectOutputStream senderOut = onlineUsers.get(sender);
                         if (senderOut != null) {
                             senderOut.writeObject(incomingMsg);
@@ -80,7 +80,7 @@ public class ChatServer {
                     }
                 }
             } catch (Exception e) {
-                System.out.println("🔴 " + currentUsername + " đã ngắt kết nối.");
+                System.out.println(" " + currentUsername + " đã ngắt kết nối.");
             } finally {
                 if (currentUsername != null) {
                     synchronized (onlineUsers) {

@@ -67,9 +67,9 @@ public class CustomerChatController {
                         Platform.runLater(() -> {
                             // Phân loại tin nhắn
                             if (msg.getSenderName().equals(myName)) {
-                                txtChatHistory.appendText(" [Tôi]: " + msg.getContent() + "\n");
+                                txtChatHistory.appendText("👤 [Tôi]: " + msg.getContent() + "\n");
                             } else {
-                                txtChatHistory.appendText("[" + msg.getSenderName() + "]: " + msg.getContent() + "\n");
+                                txtChatHistory.appendText("💬 [" + msg.getSenderName() + "]: " + msg.getContent() + "\n");
                             }
                         });
                     }
